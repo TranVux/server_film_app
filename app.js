@@ -3,6 +3,7 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
+const session = require("express-session");
 
 var indexRouter = require("./routes/index");
 const apiAuthRouter = require("./routes/api/auth");
@@ -10,6 +11,14 @@ const adminEpisodeRouter = require("./routes/admin/episode");
 const adminFilmRouter = require("./routes/admin/films");
 const categoriesRouter = require("./routes/admin/categories");
 var app = express();
+app.use(
+  session({
+    secret: "session",
+    resave: true,
+    saveUninitialized: true,
+    cookie: { secure: false },
+  })
+);
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
