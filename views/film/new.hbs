@@ -79,9 +79,14 @@
         height: 100%;
         object-fit: cover;
     }
+
+    .select2-container {
+        width: 100%;
+        height: 50px;
+    }
 </style>
 
-<header class="app-header fixed-top" onload="alertError({{error}});">
+<header class="app-header fixed-top">
     <div class="app-header-inner">
         <div class="container-fluid py-2">
             <div class="app-header-content">
@@ -460,8 +465,7 @@
 
     <div class="tab-content">
         <div class="container rounded p-2 shadow-sm">
-            <form class="col-12 p-3" id="addFilmForm" action="/admin/film/new" method="post"
-                enctype="multipart/form-data">
+            <form class="col-12 p-3" id="addFilmForm">
                 <div class="row">
                     <div class="col-md-4">
                         <div style="position: relative;"
@@ -496,9 +500,11 @@
                         </div>
                         <div class="col-12">
                             <label for="categories" class="form-label">Categories</label>
-                            <select id="categories" name="categories" class="form-select">
-                                <option selected>Choose...</option>
-                                <option>...</option>
+                            <select id="categories" data-placeholder="Select categories" name="categories" size="5"
+                                class="form-select" multiple>
+                                {{#each categories}}
+                                <option value="{{this._id}}">{{this.name}}</option>
+                                {{/each}}
                             </select>
                         </div>
                     </div>
@@ -525,33 +531,20 @@
                 <div class=" row">
                     <div class="col-10"></div>
                     <div class="col-2 mt-3">
-                        <button type="submit" class="btn app-btn-primary">Upload</button>
+                        <button type="button" onclick="handleUploadData();" class="btn app-btn-primary">Upload</button>
                     </div>
                 </div>
             </form>
         </div>
     </div>
-
-    <footer class="app-footer">
+    <footer class="app-footer" onload="onLoad({{error}}, {{categories}})">
         <div class="container text-center py-3">
             <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
         </div>
     </footer><!--//app-footer-->
 
 </div><!--//app-wrapper-->
-
 <script>
-    function alertError(error) {
-        console.log("vào hàm")
-        if (Boolean(error)) {
-
-            Swal.fire({
-                title: "Có lỗi",
-                text: "Có lỗi xảy ra!",
-                icon: "error",
-            })
-        }
-    }
 
     const form = document.querySelector("#addFilmForm");
     const dropThumbnailArea = document.querySelector(".drag-image"),
@@ -565,6 +558,96 @@
         inputBackground = dropBackgroundArea.querySelector("input");
 
     let imageThumbnail, imageBackground;
+    let listCategories = [];
+
+    $(document).ready(function () {
+        $('#categories').select2({})
+            .on("change", function (e) {
+                let currentSelectedData = $('#categories').select2('data');
+                listCategories = currentSelectedData.map(data => {
+                    return {
+                        _id: data.id,
+                        name: data.text
+                    }
+                })
+                console.log(listCategories);
+            })
+    });
+
+    const handleUploadData = async () => {
+        if (
+            form.filmName.length == 0 || form.description.length == 0 ||
+            form.totalEpisode.length == 0 || form.trailer.length == 0 ||
+            imageThumbnail === undefined || imageBackground === undefined ||
+            listCategories.length === 0
+        ) {
+            swal.fire({
+                title: "Cảnh báo!",
+                icon: "warning",
+                text: "Bạn phải điền đầy đủ thông tin vào form!"
+            })
+        } else {
+            Swal.fire({
+                title: 'Đang thêm...',
+                text: 'Vui lòng chờ...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+
+            const formData = new FormData();
+
+            formData.append("filmName", form.filmName.value);
+            formData.append("trailer", form.trailer.value);
+            formData.append("description", form.description.value);
+            formData.append("totalEpisode", form.totalEpisode.value);
+            formData.append("categories", JSON.stringify(listCategories));
+            formData.append("thumbnail", imageThumbnail);
+            formData.append("backgroundMedium", imageBackground);
+
+            const url = 'http://localhost:3000/admin/film/new'
+            const result = await fetch(url, {
+                method: 'POST',
+                body: formData,
+            });
+
+            const res = await result.json();
+
+            console.log(res);
+            Swal.close();
+            if (!res.error) {
+                Swal.fire({
+                    title: "Hurray!",
+                    text: "Thêm thành công!",
+                    icon: "success"
+                })
+                setTimeout(() => {
+                    window.location = new URL("http://localhost:3000".concat(res.urlRedirect))
+                }, 500)
+            } else {
+                Swal.fire({
+                    title: "Opss!",
+                    text: "Thêm thất bại :<!",
+                    icon: "error"
+                })
+            }
+        }
+    }
+
+    function onLoad(error, categories) {
+        console.log(categories);
+        console.log("vào hàm")
+        if (Boolean(error)) {
+
+            Swal.fire({
+                title: "Có lỗi",
+                text: "Có lỗi xảy ra!",
+                icon: "error",
+            })
+        }
+    }
 
     const uploadData = async () => {
         const data = new FormData();

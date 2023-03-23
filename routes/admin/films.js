@@ -4,6 +4,7 @@ const uploadImage = require("../../middlewares/cloundinaryUploadImage");
 
 const Authentication = require("../../middlewares/Authentication");
 const filmController = require("../../components/film/FilmController");
+const categoryController = require("../../components/categories/CategoriesController");
 
 // add middle ware after complete this function
 //http://localhost:3000/admin/film?limit=10&page=1
@@ -27,7 +28,16 @@ router.get("/", [Authentication.auth], async function (req, res, next) {
 
 //http://localhost:3000/admin/film/new
 router.get("/new", [Authentication.auth], async function (req, res, next) {
-  res.render("film/new", { title: "New Film", error: true });
+  try {
+    const result = await categoryController.getAllCategories();
+    res.render("film/new", {
+      title: "New Film",
+      error: true,
+      categories: result,
+    });
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 //http://localhost:3000/admin/film/new
@@ -45,29 +55,40 @@ router.post(
       const { filmName, categories, trailer, totalEpisode, description } =
         req.body;
       const { files } = req;
-      console.log(files);
       if (files) {
         const result = await filmController.addFilm(
           filmName,
           trailer,
           totalEpisode,
-          categories,
+          JSON.parse(categories),
           description,
           files
         );
         if (result) {
-          console.log("LOG: ADD FILM SUCCESS!");
-          res.redirect("/admin/film?limit=10&page=1");
-          // res.json(result);
+          console.log("LOG: ADD FILM SUCCESS!: ");
+          // res.redirect("/admin/film?limit=10&page=1");
+          res.json({
+            result: result,
+            urlRedirect: "/admin/film?limit=10&page=1",
+            error: false,
+          });
         } else {
           console.log("LOG: ADD FILM FAILURE!");
-          res.redirect("/admin/film/new", { title: "New Film", error: true });
-          // res.json(result);
+          res.json({
+            result: result,
+            urlRedirect: "/",
+            error: true,
+          });
         }
       }
     } catch (error) {
       console.log("LOG: ADD FILM FAILURE!");
       console.log(error);
+      res.json({
+        result: result,
+        urlRedirect: "/",
+        error: true,
+      });
     }
   }
 );
