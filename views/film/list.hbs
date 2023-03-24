@@ -217,7 +217,7 @@
                                 <li class="submenu-item"><a class="submenu-link active"
                                         href="/admin/film?limit=10&page=1">List Film</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/film/0/detail">Detail
+                                <li class="submenu-item"><a class="submenu-link" href="/admin/film/1/detail">Detail
                                         Film</a></li>
 
                             </ul>
@@ -447,9 +447,10 @@
                                                     src="{{this.thumbnail}}" />
                                             </td>
                                             <td class="cell">{{this.hearts}}</td>
-                                            <td class="cell">{{this.amount_episode}}</td>
+                                            <td class="cell">{{this.totalEpisode}}</td>
                                             <td class="cell">
-                                                <a class="btn app-btn-primary" href="#">Detail</a>
+                                                <a class="btn app-btn-primary"
+                                                    href="/admin/film/{{this._id}}/detail">Detail</a>
                                                 <a class="btn btn-danger" style="color: white;" href="#">Delete</a>
                                             </td>
                                             <td class="cell"></td>
@@ -513,6 +514,10 @@
 </div><!--//app-wrapper-->
 
 <script>
+    const update = (_id) => {
+        window.location.pathname = `/admin/film/${_id}/update`
+    }
+
     const next = (nextIndex) => {
         window.location.pathname = `/admin/film?limit=10&page=${nextIndex}`
     }

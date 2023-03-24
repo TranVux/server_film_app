@@ -98,16 +98,86 @@ router.get(
   "/:id/detail",
   [Authentication.auth],
   async function (req, res, next) {
-    res.render("film/detail", { title: "Detail Film" });
+    try {
+      const { id } = req.params;
+      const film = await filmController.getFilmById(id);
+      const categories = await categoryController.getAllCategories();
+      if (film) {
+        res.render("film/detail", {
+          title: "Detail Film",
+          film,
+          categories: categories,
+          error: false,
+        });
+        // res.json(film);
+      } else {
+        res.render("film/detail", {
+          title: "Detail Film",
+          film,
+          categories: categories,
+          error: true,
+        });
+        // res.json(film);
+      }
+    } catch (error) {
+      console.log("DETAIL FILM ROUTE ERROR!: ") + error;
+    }
   }
 );
 
 //http://localhost:3000/admin/film/:id/update
-router.get(
+router.post(
   "/:id/update",
-  [Authentication.auth],
+  [
+    uploadImage.fields([
+      { name: "thumbnail", maxCount: 1 },
+      { name: "backgroundMedium", maxCount: 1 },
+    ]),
+  ],
   async function (req, res, next) {
-    res.render("film/update", { title: "Update Film" });
+    try {
+      const { filmName, categories, trailer, totalEpisode, description } =
+        req.body;
+      const { id } = req.params;
+      const { files } = req;
+      // if (files) {
+      console.log("ID>>>>>>>>>>>>>>>>>>>: " + id);
+      console.log("FILE>>>>>>>>>>>>>>>>>>>: ");
+      // res.json({ data: files });
+      const result = await filmController.updateFilmById(
+        id,
+        filmName,
+        trailer,
+        totalEpisode,
+        JSON.parse(categories),
+        description,
+        files
+      );
+      if (result) {
+        console.log("LOG: UPDATE FILM SUCCESS!: ");
+        res.json({
+          result: result,
+          urlRedirect: "/admin/film?limit=10&page=1",
+          error: false,
+        });
+      } else {
+        console.log("LOG: UPDATE FILM FAILURE!");
+        res.json({
+          result: result,
+          urlRedirect: "/",
+          error: true,
+        });
+      }
+      // }
+    } catch (error) {
+      console.log("LOG: UPDATE FILM FAILURE!");
+      console.log(error);
+      res.json({
+        result: result,
+        urlRedirect: "/",
+        error: true,
+      });
+    }
   }
 );
 

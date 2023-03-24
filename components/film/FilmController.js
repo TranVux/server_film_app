@@ -8,6 +8,14 @@ const getFilm = async (_limit, _page) => {
   }
 };
 
+const getFilmById = async (_id) => {
+  try {
+    return await filmService.getFilmById(_id);
+  } catch (error) {
+    throw error;
+  }
+};
+
 const addFilm = async (
   filmName,
   trailerID,
@@ -30,4 +38,28 @@ const addFilm = async (
   }
 };
 
-module.exports = { getFilm, addFilm };
+const updateFilmById = async (
+  _id,
+  filmName,
+  trailerID,
+  totalEpisode,
+  categories,
+  description,
+  imageList
+) => {
+  try {
+    return await filmService.updateFilmById(
+      _id,
+      filmName,
+      trailerID,
+      totalEpisode,
+      categories,
+      description,
+      imageList
+    );
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { getFilm, addFilm, getFilmById, updateFilmById };

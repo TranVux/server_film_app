@@ -217,7 +217,7 @@
                                 <li class="submenu-item"><a class="submenu-link" href="/admin/film?limit=10&page=1">List
                                         Film</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/film/0/detail">Detail
+                                <li class="submenu-item"><a class="submenu-link" href="/admin/film/1/detail">Detail
                                         Film</a></li>
 
                             </ul>
@@ -540,10 +540,6 @@
 
     <footer class="app-footer">
         <div class="container text-center py-3">
-            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
-            {{!-- <small class="copyright">Designed with <span class="sr-only">love</span><i class="fas fa-heart"
-                    style="color: #fb866a;"></i> by <a class="app-link" href="http://themes.3rdwavemedia.com"
-                    target="_blank">Xiaoying Riley</a> for developers</small> --}}
 
         </div>
     </footer><!--//app-footer-->
@@ -554,7 +550,7 @@
     const updateCategory = async (_id, name) => {
         console.log(_id + " " + name);
         const { value: formValues } = await Swal.fire({
-            title: 'Update Category',
+            title: 'Cập nhật loại phim',
             html:
                 `<input id="swal-input2" value='${name}' class="swal2-input">`,
             focusConfirm: false,
@@ -567,8 +563,8 @@
 
         if (formValues) {
             Swal.fire({
-                title: 'Updating...',
-                html: 'Please wait...',
+                title: 'Đang cập nhật...',
+                html: 'Vui lòng chờ...',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
                 didOpen: () => {
@@ -590,15 +586,15 @@
                 Swal.close();
                 if (data.result) {
                     Swal.fire({
-                        title: "Congratulation!",
-                        text: "Update Categories Success!",
+                        title: "Hurray!",
+                        text: "Cập nhật loại phim thành công!",
                         icon: "success"
                     })
-                    window.location.reload();
+                    setTimeout(() => { window.location.reload(); }, 500)
                 } else {
                     Swal.fire({
-                        title: "Opss!",
-                        text: "Update Category Failure!",
+                        title: "Opsss!",
+                        text: "Cập nhật loại phim thất bại!",
                         icon: "error"
                     })
                 }
@@ -612,8 +608,8 @@
     const handleDeleteCategory = async (_id) => {
         console.log(_id);
         Swal.fire({
-            title: 'Deleting...',
-            html: 'Please wait...',
+            title: 'Đang xóa...',
+            html: 'Vui lòng chờ...',
             allowEscapeKey: false,
             allowOutsideClick: false,
             didOpen: () => {
@@ -634,12 +630,16 @@
         Swal.close();
         console.log(data);
         if (data.result) {
-            Swal.fire("Poof! Your category document has been deleted!", {
+            Swal.fire({
+                title: "Hurray",
+                text: "Xóa thành công!",
                 icon: "success",
             });
-            window.location.reload();
+            setTimeout(() => { window.location.reload(); }, 500)
         } else {
-            Swal.fire("Failure to delete your category document!", {
+            Swal.fire({
+                title: "Opsss",
+                text: "Có lỗi xảy ra trong khi xóa!",
                 icon: "error",
             });
         }
@@ -647,8 +647,8 @@
 
     const deleteCategory = async function (_id) {
         Swal.fire({
-            title: "Are you sure?",
-            text: "Once deleted, you will not be able to recover this imaginary file!",
+            title: "Xác nhận?",
+            text: "Khi xóa xong bạn không thể nào khôi phục dữ liệu bị xóa được nữa!",
             icon: "warning",
             showCloseButton: true,
             showCancelButton: true,
@@ -657,8 +657,8 @@
                 handleDeleteCategory(_id);
             } else {
                 Swal.fire({
-                    title: "Safe!!",
-                    text: "Your category document is safe!",
+                    title: "Hurray!!",
+                    text: "Dữ liệu của bạn vẫn được giữ nguyên!",
                     icon: "success",
                 });
             }
@@ -667,7 +667,7 @@
 
     const newCategory = async () => {
         const { value: formValues } = await Swal.fire({
-            title: 'Add Category',
+            title: 'Thêm thể loại',
             html:
                 '<input id="swal-input2" class="swal2-input">',
             focusConfirm: false,
@@ -680,8 +680,8 @@
 
         if (formValues) {
             Swal.fire({
-                title: 'Adding...',
-                html: 'Please wait...',
+                title: 'Đang thêm...',
+                html: 'Vui lòng chờ...',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
                 didOpen: () => {
@@ -704,15 +704,15 @@
             Swal.close();
             if (data.result) {
                 Swal.fire({
-                    title: "Congratulation!",
-                    text: "Add Categories Success!",
+                    title: "Hurray!",
+                    text: "Thêm loại phim thành công!",
                     icon: "success"
                 })
                 window.location.reload();
             } else {
                 Swal.fire({
-                    title: "Opss!",
-                    text: "Add Category Failure!",
+                    title: "Opsss!",
+                    text: "Thêm loại phim thất bại!",
                     icon: "error"
                 })
             }
