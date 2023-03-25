@@ -443,17 +443,16 @@
                             </div>
                             <div class="col-6">
                                 <div class="my-3">
-                                    <label for="totalEpisode" class="form-label">Total Episode</label>
-                                    <input type="number" class="form-control" value="{{film.totalEpisode}}"
-                                        name="totalEpisode" id="totalEpisode">
+                                    <label for="total_episode" class="form-label">Total Episode</label>
+                                    <input type="number" class="form-control" value="{{film.total_episode}}"
+                                        name="total_episode" id="total_episode">
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
-                            <label for="categories" class="form-label">Categories</label>
-                            <select id="categories" id="categories" data-placeholder="Select categories"
-                                name="categories" size="5" class="form-select" style="height: 40px !important;"
-                                multiple>
+                            <label for="list_category" class="form-label">Categories</label>
+                            <select id="list_category" data-placeholder="Select categories" name="list_category"
+                                size="5" class="form-select" style="height: 40px !important;" multiple>
                                 {{#each categories}}
                                 <option value="{{this._id}}">{{this.name}}</option>
                                 {{/each}}
@@ -462,7 +461,7 @@
                                 let initData = [];
                             </script>
                         </div>
-                        {{#each film.categories}}
+                        {{#each film.list_category}}
                         <script>
                             initData.push('{{ this._id }}')
                         </script>
@@ -472,8 +471,8 @@
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <label for="floatingTextarea2">Description</label>
-                        <textarea class="form-control" id="description" name="description"
-                            style="height: 100px">{{film.description}}</textarea>
+                        <textarea class="form-control" id="synopsis" name="synopsis"
+                            style="height: 100px">{{film.synopsis}}</textarea>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -484,7 +483,7 @@
                             <h6 style="text-align: center;">Drag & Drop Background Film Here</h6>
                             <span>OR</span>
                             <button type="button">Browse File</button>
-                            <input type="file" name="backgroundMedium" hidden />
+                            <input type="file" name="background_medium" hidden />
                             <img style="position: absolute; z-index: 10;top: 0;right: 0;"
                                 src="{{film.background_medium}}" />
                         </div>
@@ -524,10 +523,10 @@
 
     $(document).ready(function () {
 
-        $('#categories').select2({
+        $('#list_category').select2({
             width: "100%",
         }).on("change", function (e) {
-            let currentSelectedData = $('#categories').select2('data');
+            let currentSelectedData = $('#list_category').select2('data');
             listCategories = currentSelectedData.map(data => {
                 return {
                     _id: data.id,
@@ -536,7 +535,7 @@
             })
         })
 
-        $("#categories").val(initData).trigger('change');
+        $("#list_category").val(initData).trigger('change');
     });
 
     $("#confirmUpdate").on('change', () => {
@@ -555,8 +554,8 @@
         })
 
         $("#buttonSubmit").attr('disabled', !canUpdate);
-        $("#description").attr('disabled', !canUpdate);
-        $("#categories").select2({
+        $("#synopsis").attr('disabled', !canUpdate);
+        $("#list_category").select2({
             disabled: !canUpdate,
         })
     }
@@ -565,8 +564,8 @@
 
     const handleUploadData = async (id) => {
         if (
-            form.filmName.length == 0 || form.description.length == 0 ||
-            form.totalEpisode.length == 0 || form.trailer.length == 0 ||
+            form.filmName.length == 0 || form.synopsis.length == 0 ||
+            form.total_episode.length == 0 || form.trailer.length == 0 ||
             listCategories.length === 0
         ) {
             swal.fire({
@@ -589,11 +588,11 @@
 
             formData.append("filmName", form.filmName.value);
             formData.append("trailer", form.trailer.value);
-            formData.append("description", form.description.value);
-            formData.append("totalEpisode", form.totalEpisode.value);
-            formData.append("categories", JSON.stringify(listCategories));
+            formData.append("synopsis", form.synopsis.value);
+            formData.append("total_episode", form.total_episode.value);
+            formData.append("list_category", JSON.stringify(listCategories));
             formData.append("thumbnail", imageThumbnail);
-            formData.append("backgroundMedium", imageBackground);
+            formData.append("background_medium", imageBackground);
 
             const url = `http://localhost:3000/admin/film/${id}/update`
             const result = await fetch(url, {

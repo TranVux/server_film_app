@@ -451,13 +451,13 @@
                             <div class="col-6">
                                 <div class="my-3">
                                     <label for="totalEpisode" class="form-label">Total Episode</label>
-                                    <input type="number" class="form-control" name="totalEpisode" id="totalEpisode">
+                                    <input type="number" class="form-control" name="total_episode" id="total_episode">
                                 </div>
                             </div>
                         </div>
                         <div class="col-12">
                             <label for="categories" class="form-label">Categories</label>
-                            <select id="categories" data-placeholder="Select categories" name="categories" size="5"
+                            <select id="categories" data-placeholder="Select categories" name="list_category" size="5"
                                 class="form-select" style="height: 40px !important;" multiple>
                                 {{#each categories}}
                                 <option value="{{this._id}}">{{this.name}}</option>
@@ -469,7 +469,7 @@
                 <div class="row mt-3">
                     <div class="col-md-12">
                         <label for="floatingTextarea2">Description</label>
-                        <textarea class="form-control" id="floatingTextarea2" name="description"
+                        <textarea class="form-control" id="floatingTextarea2" name="synopsis"
                             style="height: 100px"></textarea>
                     </div>
                 </div>
@@ -481,7 +481,7 @@
                             <h6 style="text-align: center;">Drag & Drop Background Film Here</h6>
                             <span>OR</span>
                             <button type="button">Browse File</button>
-                            <input type="file" name="backgroundMedium" hidden />
+                            <input type="file" name="background_medium" hidden />
                         </div>
                     </div>
                 </div>
@@ -521,10 +521,10 @@
     let listCategories = [];
 
     $(document).ready(function () {
-        $('#categories').select2({
+        $('#list_category').select2({
             width: "100%",
         }).on("change", function (e) {
-            let currentSelectedData = $('#categories').select2('data');
+            let currentSelectedData = $('#list_category').select2('data');
             listCategories = currentSelectedData.map(data => {
                 return {
                     _id: data.id,
@@ -541,8 +541,8 @@
 
     const handleUploadData = async () => {
         if (
-            form.filmName.length == 0 || form.description.length == 0 ||
-            form.totalEpisode.length == 0 || form.trailer.length == 0 ||
+            form.filmName.length == 0 || form.synopsis.length == 0 ||
+            form.total_episode.length == 0 || form.trailer.length == 0 ||
             imageThumbnail === undefined || imageBackground === undefined ||
             listCategories.length === 0
         ) {
@@ -553,7 +553,7 @@
             })
         } else {
             Swal.fire({
-                title: 'Đang thêm...',
+                title: 'Đang cập nhật...',
                 text: 'Vui lòng chờ...',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
@@ -566,11 +566,11 @@
 
             formData.append("filmName", form.filmName.value);
             formData.append("trailer", form.trailer.value);
-            formData.append("description", form.description.value);
-            formData.append("totalEpisode", form.totalEpisode.value);
-            formData.append("categories", JSON.stringify(listCategories));
+            formData.append("synopsis", form.synopsis.value);
+            formData.append("total_episode", form.total_episode.value);
+            formData.append("list_category", JSON.stringify(listCategories));
             formData.append("thumbnail", imageThumbnail);
-            formData.append("backgroundMedium", imageBackground);
+            formData.append("background_medium", imageBackground);
 
             const url = 'http://localhost:3000/admin/film/new'
             const result = await fetch(url, {
@@ -715,7 +715,7 @@
                 if (type === "thumbnail") {
                     form.thumbnail.files = container.files;
                 } else {
-                    form.backgroundMedium.files = container.files;
+                    form.background_medium.files = container.files;
                 }
             }
             fileReader.readAsDataURL(image);

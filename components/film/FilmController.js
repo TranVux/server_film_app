@@ -19,18 +19,18 @@ const getFilmById = async (_id) => {
 const addFilm = async (
   filmName,
   trailerID,
-  totalEpisode,
-  categories,
-  description,
+  total_episode,
+  list_category,
+  synopsis,
   imageList
 ) => {
   try {
     return await filmService.addFilm(
       filmName,
       trailerID,
-      totalEpisode,
-      categories,
-      description,
+      total_episode,
+      list_category,
+      synopsis,
       imageList
     );
   } catch (error) {
@@ -42,9 +42,9 @@ const updateFilmById = async (
   _id,
   filmName,
   trailerID,
-  totalEpisode,
-  categories,
-  description,
+  total_episode,
+  list_category,
+  synopsis,
   imageList
 ) => {
   try {
@@ -52,9 +52,9 @@ const updateFilmById = async (
       _id,
       filmName,
       trailerID,
-      totalEpisode,
-      categories,
-      description,
+      total_episode,
+      list_category,
+      synopsis,
       imageList
     );
   } catch (error) {

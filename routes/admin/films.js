@@ -47,21 +47,22 @@ router.post(
   [
     uploadImage.fields([
       { name: "thumbnail", maxCount: 1 },
-      { name: "backgroundMedium", maxCount: 1 },
+      { name: "background_medium", maxCount: 1 },
     ]),
   ],
   async function (req, res, next) {
     try {
-      const { filmName, categories, trailer, totalEpisode, description } =
+      const { filmName, list_category, trailer, total_episode, synopsis } =
         req.body;
       const { files } = req;
       if (files) {
+        console.log(files);
         const result = await filmController.addFilm(
           filmName,
           trailer,
-          totalEpisode,
-          JSON.parse(categories),
-          description,
+          total_episode,
+          JSON.parse(list_category),
+          synopsis,
           files
         );
         if (result) {
@@ -131,12 +132,12 @@ router.post(
   [
     uploadImage.fields([
       { name: "thumbnail", maxCount: 1 },
-      { name: "backgroundMedium", maxCount: 1 },
+      { name: "background_medium", maxCount: 1 },
     ]),
   ],
   async function (req, res, next) {
     try {
-      const { filmName, categories, trailer, totalEpisode, description } =
+      const { filmName, list_category, trailer, total_episode, synopsis } =
         req.body;
       const { id } = req.params;
       const { files } = req;
@@ -148,9 +149,9 @@ router.post(
         id,
         filmName,
         trailer,
-        totalEpisode,
-        JSON.parse(categories),
-        description,
+        total_episode,
+        JSON.parse(list_category),
+        synopsis,
         files
       );
       if (result) {
