@@ -1,6 +1,13 @@
+const CategoryModel = require("./CategoriesModel");
+
 const getAllCategories = async () => {
   try {
-    return DATA;
+    const categories = await CategoryModel.find();
+    if (categories) {
+      return categories;
+    } else {
+      return null;
+    }
   } catch (error) {
     console.log("getAllCategories: " + error);
   }

@@ -5,6 +5,11 @@ var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 const session = require("express-session");
 
+//database config
+const db = require("./configs/db");
+db.connect();
+//end database config
+
 var indexRouter = require("./routes/index");
 const apiAuthRouter = require("./routes/api/auth");
 const adminEpisodeRouter = require("./routes/admin/episode");

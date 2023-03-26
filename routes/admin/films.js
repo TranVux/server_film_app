@@ -104,6 +104,7 @@ router.get(
       const film = await filmController.getFilmById(id);
       const categories = await categoryController.getAllCategories();
       if (film) {
+        console.log(film);
         res.render("film/detail", {
           title: "Detail Film",
           film,
