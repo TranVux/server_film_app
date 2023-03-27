@@ -452,7 +452,8 @@
                                             <td class="cell">
                                                 <a class="btn app-btn-primary"
                                                     href="/admin/film/{{this._id}}/detail">Detail</a>
-                                                <a class="btn btn-danger" style="color: white;" href="#">Delete</a>
+                                                <a class="btn btn-danger" style="color: white;" href="#"
+                                                    onclick="confirmDeleteFilm('{{this._id}}', '{{this._id_collection}}')">Delete</a>
                                             </td>
                                             <td class="cell"></td>
                                         </tr>
@@ -515,6 +516,61 @@
 </div><!--//app-wrapper-->
 
 <script>
+    const confirmDeleteFilm = (filmID, _id_collection) => {
+
+        Swal.fire({
+            title: "Xác nhận?",
+            text: "Khi xóa xong bạn không thể nào khôi phục dữ liệu bị xóa được nữa!",
+            icon: "warning",
+            showCloseButton: true,
+            showCancelButton: true,
+        }).then((result) => {
+            if (!result.isConfirmed) {
+                Swal.fire({
+                    title: "Hurray!!",
+                    text: "Dữ liệu của bạn vẫn được giữ nguyên!",
+                    icon: "success",
+                });
+            } else {
+                handleDeleteFilm(filmID, _id_collection)
+            }
+        });
+    }
+
+    const handleDeleteFilm = async (filmID, _id_collection) => {
+        Swal.fire({
+            title: 'Đang thêm...',
+            html: 'Vui lòng chờ...',
+            allowEscapeKey: false,
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading()
+            }
+        })
+        try {
+            const bodyContent = JSON.stringify({
+                "_id": filmID,
+                _id_collection
+            })
+            const res = await fetch("http://localhost:3000/admin/film/delete", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: bodyContent
+            })
+
+            const result = await res.json();
+            if (!result.error) {
+                setTimeout(() => {
+                    window.location.reload();
+                }, 500)
+            }
+            Swal.close();
+            console.log(result)
+        } catch (e) {
+            console.log(e)
+        }
+    }
+
     const update = (_id) => {
         window.location.pathname = `/admin/film/${_id}/update`
     }

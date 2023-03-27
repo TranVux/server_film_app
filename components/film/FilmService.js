@@ -134,7 +134,16 @@ const updateFilmById = async (
   }
 };
 
-module.exports = { getFilm, addFilm, getFilmById, updateFilmById };
+const deleteFilm = async (id) => {
+  try {
+    const result = await FilmModel.deleteOne({ _id: id });
+    return result;
+  } catch (error) {
+    console.log("deleteFilm: " + error);
+  }
+};
+
+module.exports = { getFilm, addFilm, getFilmById, updateFilmById, deleteFilm };
 
 const DATA = [
   {

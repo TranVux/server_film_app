@@ -71,4 +71,23 @@ const getAllCollection = async () => {
   }
 };
 
-module.exports = { getAllCollection, addCollection, addFilm, updateFilm };
+const deleteFilm = async (filmId, collectionID) => {
+  try {
+    const result = await CollectionModel.updateOne(
+      { _id: collectionID },
+      { $pull: { films: filmId } }
+    );
+    return result;
+  } catch (error) {
+    console.log("deleteFilmInCollection: " + error);
+    return null;
+  }
+};
+
+module.exports = {
+  getAllCollection,
+  addCollection,
+  addFilm,
+  updateFilm,
+  deleteFilm,
+};

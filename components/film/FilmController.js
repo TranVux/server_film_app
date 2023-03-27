@@ -78,4 +78,17 @@ const updateFilmById = async (
   }
 };
 
-module.exports = { getFilm, addFilm, getFilmById, updateFilmById };
+const deleteFilm = async (filmID, collectionID) => {
+  try {
+    const resultFilm = await filmService.deleteFilm(filmID);
+    const resultCollection = await collectionService.deleteFilm(
+      filmID,
+      collectionID
+    );
+    return resultCollection && resultFilm;
+  } catch (error) {
+    throw error;
+  }
+};
+
+module.exports = { getFilm, addFilm, getFilmById, updateFilmById, deleteFilm };

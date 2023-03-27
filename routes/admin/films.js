@@ -213,4 +213,15 @@ router.post(
   }
 );
 
+//http://localhost:3000/admin/film//delete
+router.post("/delete", [Authentication.auth], async (req, res, next) => {
+  const { _id, _id_collection } = req.body;
+  try {
+    const result = filmController.deleteFilm(_id, _id_collection);
+    res.status(200).json({ result, error: false });
+  } catch (error) {
+    res.status(400).json({ result: null, error: true });
+    next(error);
+  }
+});
 module.exports = router;
