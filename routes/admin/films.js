@@ -5,6 +5,7 @@ const uploadImage = require("../../middlewares/cloundinaryUploadImage");
 const Authentication = require("../../middlewares/Authentication");
 const filmController = require("../../components/film/FilmController");
 const categoryController = require("../../components/categories/CategoriesController");
+const collectionController = require("../../components/collections/CollectionController");
 
 // add middle ware after complete this function
 //http://localhost:3000/admin/film?limit=10&page=1
@@ -27,13 +28,15 @@ router.get("/", [Authentication.auth], async function (req, res, next) {
 });
 
 //http://localhost:3000/admin/film/new
-router.get("/new", [Authentication.auth], async function (req, res, next) {
+router.get("/new", async function (req, res, next) {
   try {
     const result = await categoryController.getAllCategories();
+    const collections = await collectionController.getAllCollection();
     res.render("film/new", {
       title: "New Film",
       error: true,
       categories: result,
+      collections: collections,
     });
   } catch (error) {
     console.log(error);
@@ -52,8 +55,14 @@ router.post(
   ],
   async function (req, res, next) {
     try {
-      const { filmName, list_category, trailer, total_episode, synopsis } =
-        req.body;
+      const {
+        filmName,
+        list_category,
+        trailer,
+        total_episode,
+        synopsis,
+        _id_collection,
+      } = req.body;
       const { files } = req;
       if (files) {
         console.log(files);
@@ -63,6 +72,7 @@ router.post(
           total_episode,
           JSON.parse(list_category),
           synopsis,
+          _id_collection,
           files
         );
         if (result) {
@@ -103,12 +113,21 @@ router.get(
       const { id } = req.params;
       const film = await filmController.getFilmById(id);
       const categories = await categoryController.getAllCategories();
+      const collections = await collectionController.getAllCollection();
+      for (let i = 0; i < collections.length; i++) {
+        if (collections[i]._id.toString() === film._id_collection.toString()) {
+          collections[i].isSelected = true;
+        } else {
+          collections[i].isSelected = false;
+        }
+      }
       if (film) {
-        console.log(film);
+        // console.log(film);
         res.render("film/detail", {
           title: "Detail Film",
           film,
           categories: categories,
+          collections: collections,
           error: false,
         });
         // res.json(film);
@@ -117,6 +136,7 @@ router.get(
           title: "Detail Film",
           film,
           categories: categories,
+          collections: collections,
           error: true,
         });
         // res.json(film);
@@ -138,14 +158,22 @@ router.post(
   ],
   async function (req, res, next) {
     try {
-      const { filmName, list_category, trailer, total_episode, synopsis } =
-        req.body;
+      const {
+        filmName,
+        list_category,
+        trailer,
+        total_episode,
+        synopsis,
+        _id_collection,
+        previous_id_collection,
+      } = req.body;
       const { id } = req.params;
       const { files } = req;
       // if (files) {
-      console.log("ID>>>>>>>>>>>>>>>>>>>: " + id);
-      console.log("FILE>>>>>>>>>>>>>>>>>>>: ");
-      // res.json({ data: files });
+      // console.log("ID>>>>>>>>>>>>>>>>>>>: " + id);
+      console.log("PreviousID>>>>>>>>>>>>>>>>>>>: " + previous_id_collection);
+      // console.log("FILE>>>>>>>>>>>>>>>>>>>: ");
+      // console.log(files);
       const result = await filmController.updateFilmById(
         id,
         filmName,
@@ -153,6 +181,8 @@ router.post(
         total_episode,
         JSON.parse(list_category),
         synopsis,
+        _id_collection,
+        previous_id_collection,
         files
       );
       if (result) {

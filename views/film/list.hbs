@@ -217,8 +217,9 @@
                                 <li class="submenu-item"><a class="submenu-link active"
                                         href="/admin/film?limit=10&page=1">List Film</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/film/1/detail">Detail
-                                        Film</a></li>
+                                {{!-- <li class="submenu-item"><a class="submenu-link"
+                                        href="/admin/film/1/detail">Detail
+                                        Film</a></li> --}}
 
                             </ul>
                         </div>
@@ -444,7 +445,7 @@
                                             <td class="cell"><span class="truncate">{{this.name}}</span></td>
                                             <td class="cell">
                                                 <img width="100px" style="aspect-ratio: 3/4; object-fit: contain;"
-                                                    src="{{this.thumbnail}}" />
+                                                    src="{{this.thumbnail.path}}" />
                                             </td>
                                             <td class="cell">{{this.like}}</td>
                                             <td class="cell">{{this.total_episode}}</td>

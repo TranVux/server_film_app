@@ -1,23 +1,29 @@
+const FilmModel = require("./FilmModel");
+
 const getFilm = async (_limit, _page) => {
-  //previousEndItem: id of object
   try {
     if (!_limit || !_page) {
-      return { data: DATA };
+      const films = await FilmModel.find();
+      return { data: films };
     } else {
+      const countOfDocument = await FilmModel.count({});
+      console.log(countOfDocument);
       const startIndex = (Number(_page) - 1) * _limit;
       const endIndex = Number(_page) * Number(_limit);
-      const totalPage = Math.ceil(DATA.length / Number(_limit));
+      const totalPage = Math.ceil(countOfDocument / Number(_limit));
+
       const result = {};
+
       result.totalPage = totalPage;
-      if (endIndex < DATA.length) {
+      if (endIndex < countOfDocument) {
         result.next = { page: Number(_page) + 1, limit: _limit };
       }
 
       if (startIndex > 0) {
         result.previous = { page: Number(_page) - 1, limit: _limit };
       }
+      result.data = await FilmModel.find().skip(startIndex).limit(_limit);
 
-      result.data = DATA.slice(startIndex, endIndex);
       return result;
     }
   } catch (error) {
@@ -31,35 +37,41 @@ const addFilm = async (
   total_episode,
   list_category,
   synopsis,
+  _id_collection,
   imageList = {}
 ) => {
   try {
-    const newObject = {
-      _id: DATA.length + 1,
+    const result = await FilmModel.create({
       name: filmName,
       trailer: trailerID,
-      like: 0,
-      score: 0,
       total_episode: total_episode,
-      list_category: list_category ? list_category : [],
-      list_episode: [{}],
-      thumbnail: imageList.thumbnail[0].path,
-      background_medium: imageList.background_medium[0].path,
+      list_category: list_category,
       synopsis: synopsis,
-      _id_collection: "01GWCBTT57DE44R885BS545ZMS",
-    };
-    console.log("NEW OBJECT: " + newObject);
-    DATA.push(newObject);
-    return newObject;
+      thumbnail: {
+        filename: imageList.thumbnail[0].filename,
+        path: imageList.thumbnail[0].path,
+      },
+      background_medium: {
+        filename: imageList.background_medium[0].filename,
+        path: imageList.background_medium[0].path,
+      },
+      _id_collection: _id_collection,
+    });
+    // console.log(result.);
+    if (result) {
+      return result;
+    } else {
+      return result;
+    }
   } catch (error) {
     console.log("addFilm: " + error);
-    return null;
+    return result;
   }
 };
 
 const getFilmById = async (_id) => {
   try {
-    const film = DATA.find((data) => data._id.toString() === _id.toString());
+    const film = await FilmModel.findById(_id);
     if (film) {
       return film;
     }
@@ -76,50 +88,49 @@ const updateFilmById = async (
   total_episode,
   list_category,
   synopsis,
+  __id_collection,
   imageList = {}
 ) => {
   try {
-    const film = DATA.find((film) => film._id.toString() === _id.toString());
-    console.log("FILM ITEM MUST UPDATE>>>>>>>>>: " + film._id);
+    const oldResult = await FilmModel.findById(_id);
+    const result = await FilmModel.findOneAndUpdate(
+      { _id: _id },
+      {
+        $set: {
+          name: filmName,
+          trailer: trailerID,
+          total_episode: total_episode,
+          list_category: list_category,
+          synopsis: synopsis,
+          thumbnail:
+            JSON.stringify(imageList) !== "{}" &&
+            imageList.thumbnail[0].filename
+              ? {
+                  filename: imageList.thumbnail[0].filename,
+                  path: imageList.thumbnail[0].path,
+                }
+              : oldResult.thumbnail,
+          background_medium:
+            JSON.stringify(imageList) !== "{}" &&
+            imageList.background_medium[0].filename
+              ? {
+                  filename: imageList.background_medium[0].filename,
+                  path: imageList.background_medium[0].path,
+                }
+              : oldResult.background_medium,
+          _id_collection: __id_collection,
+        },
+      }
+    );
 
-    if (film) {
-      const index = DATA.indexOf(film);
-      console.log("FILM INDEX MUST UPDATE>>>>>>>>>: " + index);
-
-      const newFilm = {
-        _id: DATA[index]._id,
-        name: filmName ? filmName : DATA[index]._id,
-        trailer: trailerID ? trailerID : DATA[index].trailer,
-        like: 0,
-        score: DATA[index].score,
-        list_episode: DATA[index].list_episode,
-        total_episode: total_episode
-          ? total_episode
-          : DATA[index].total_episode,
-        list_category: list_category
-          ? list_category
-          : DATA[index].list_category,
-        synopsis: synopsis ? synopsis : DATA[index].synopsis,
-        thumbnail:
-          JSON.stringify(imageList) !== "{}" && imageList.thumbnail[0].path
-            ? imageList.thumbnail[0].path
-            : DATA[index].thumbnail,
-        background_medium:
-          JSON.stringify(imageList) !== "{}" &&
-          imageList.background_medium[0].path
-            ? imageList.background_medium[0].path
-            : DATA[index].background_medium,
-        _id_collection: DATA[index]._id_collection,
-      };
-
-      DATA.splice(Number(index), 1, newFilm);
-      console.log("UPDATE SUCCESS=>>>>>>>>>>>>>>>>>>>>");
-      return newFilm;
+    if (result) {
+      return result;
     } else {
-      return null;
+      return result;
     }
   } catch (error) {
     console.log("updateFilmById: " + error);
+    return result;
   }
 };
 

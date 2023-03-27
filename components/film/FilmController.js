@@ -1,4 +1,5 @@
 const filmService = require("./FilmService");
+const collectionService = require("../collections/CollectionService");
 
 const getFilm = async (_limit, _page) => {
   try {
@@ -22,17 +23,23 @@ const addFilm = async (
   total_episode,
   list_category,
   synopsis,
+  _id_collection,
   imageList
 ) => {
   try {
-    return await filmService.addFilm(
+    const filmResult = await filmService.addFilm(
       filmName,
       trailerID,
       total_episode,
       list_category,
       synopsis,
+      _id_collection,
       imageList
     );
+    // console.log("Film ID: " + filmResult);
+    const collectionResult = await collectionService.addFilm(filmResult);
+    console.log("CollectionResult: " + collectionResult);
+    return filmResult;
   } catch (error) {
     throw error;
   }
@@ -45,18 +52,27 @@ const updateFilmById = async (
   total_episode,
   list_category,
   synopsis,
+  _id_collection,
+  previous_id_collection,
   imageList
 ) => {
   try {
-    return await filmService.updateFilmById(
+    console.log(
+      "FilmController-PreviousCollectionID: " + previous_id_collection
+    );
+    const result = await filmService.updateFilmById(
       _id,
       filmName,
       trailerID,
       total_episode,
       list_category,
       synopsis,
+      _id_collection,
       imageList
     );
+    await collectionService.updateFilm(previous_id_collection, _id);
+
+    return result;
   } catch (error) {
     throw error;
   }

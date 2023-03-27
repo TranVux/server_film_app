@@ -301,8 +301,9 @@
                                 <li class="submenu-item"><a class="submenu-link" href="/admin/film?limit=10&page=1">List
                                         Film</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/film/1/detail">Detail
-                                        Film</a></li>
+                                {{!-- <li class="submenu-item"><a class="submenu-link"
+                                        href="/admin/film/1/detail">Detail
+                                        Film</a></li> --}}
 
                             </ul>
                         </div>
@@ -455,7 +456,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12">
+                        <div class="col-12 my-3">
                             <label for="list_category" class="form-label">Categories</label>
                             <select id="list_category" data-placeholder="Select categories" name="list_category"
                                 size="5" class="form-select" style="height: 40px !important;" multiple>
@@ -463,6 +464,22 @@
                                 <option value="{{this._id}}">{{this.name}}</option>
                                 {{/each}}
                             </select>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-12 my-3">
+                                <label for="collection" class="form-label">Collections</label>
+                                <select id="collection" data-placeholder="Select " name="collection" class="form-select"
+                                    style="height: 40px !important;">
+                                    <option value="">Chọn bộ...</option>
+                                    {{#each collections}}
+                                    <option value="{{this._id}}">{{this.name}}</option>
+                                    {{/each}}
+                                </select>
+                                <button type="button" class="btn btn-primary mt-3" onclick="handleAddCollection();"
+                                    style="color: white;">Add
+                                    Collection</button>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -535,8 +552,66 @@
         })
     });
 
+    $("#collection").on('change', () => {
+        console.log(form.collection.value)
+    })
+
     const handleClearData = () => {
         form.reset();
+    }
+
+    const handleAddCollection = async () => {
+        const { value: formValues } = await Swal.fire({
+            title: 'Thêm bộ',
+            html:
+                '<input id="swal-input2" class="swal2-input">',
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input2').value
+                ]
+            }
+        })
+
+        if (formValues) {
+            Swal.fire({
+                title: 'Đang thêm...',
+                html: 'Vui lòng chờ...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+            let url = `http://localhost:3000/admin/collections/new`;
+            const value = formValues[0]
+            let bodyContent = JSON.stringify({
+                "name": value
+            });
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: bodyContent,
+            })
+
+            const data = await res.json();
+            Swal.close();
+            if (!data.error) {
+                Swal.fire({
+                    title: "Hurray!",
+                    text: "Thêm bộ thành công!",
+                    icon: "success"
+                })
+                window.location.reload();
+            } else {
+                Swal.fire({
+                    title: "Opsss!",
+                    text: "Thêm bộ thất bại!",
+                    icon: "error"
+                })
+            }
+        }
     }
 
     const handleUploadData = async () => {
@@ -544,7 +619,7 @@
             form.filmName.length == 0 || form.synopsis.length == 0 ||
             form.total_episode.length == 0 || form.trailer.length == 0 ||
             imageThumbnail === undefined || imageBackground === undefined ||
-            listCategories.length === 0
+            form.collection.value.length == 0 || listCategories.length === 0
         ) {
             swal.fire({
                 title: "Cảnh báo!",
@@ -568,6 +643,7 @@
             formData.append("trailer", form.trailer.value);
             formData.append("synopsis", form.synopsis.value);
             formData.append("total_episode", form.total_episode.value);
+            formData.append("_id_collection", form.collection.value);
             formData.append("list_category", JSON.stringify(listCategories));
             formData.append("thumbnail", imageThumbnail);
             formData.append("background_medium", imageBackground);
@@ -579,7 +655,6 @@
             });
 
             const res = await result.json();
-
             console.log(res);
             Swal.close();
             if (!res.error) {

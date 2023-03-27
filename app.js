@@ -15,6 +15,8 @@ const apiAuthRouter = require("./routes/api/auth");
 const adminEpisodeRouter = require("./routes/admin/episode");
 const adminFilmRouter = require("./routes/admin/films");
 const categoriesRouter = require("./routes/admin/categories");
+const collectionsRouter = require("./routes/admin/collections");
+
 var app = express();
 app.use(
   session({
@@ -41,6 +43,7 @@ app.use("/api/auth", apiAuthRouter);
 app.use("/admin/episode", adminEpisodeRouter);
 app.use("/admin/film", adminFilmRouter);
 app.use("/admin/categories", categoriesRouter);
+app.use("/admin/collections", collectionsRouter);
 //
 
 // catch 404 and forward to error handler

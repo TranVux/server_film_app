@@ -301,9 +301,9 @@
                                 <li class="submenu-item"><a class="submenu-link" href="/admin/film?limit=10&page=1">List
                                         Film</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link active"
+                                {{!-- <li class="submenu-item"><a class="submenu-link active"
                                         href="/admin/film/1/detail">Detail
-                                        Film</a></li>
+                                        Film</a></li> --}}
 
                             </ul>
                         </div>
@@ -422,7 +422,8 @@
                             <span>OR</span>
                             <button type="button">Browse File</button>
                             <input type="file" name="thumbnail" hidden />
-                            <img style="position: absolute; z-index: 10;top: 0;right: 0;" src="{{film.thumbnail}}" />
+                            <img style="position: absolute; z-index: 10;top: 0;right: 0;"
+                                src="{{film.thumbnail.path}}" />
                         </div>
                     </div>
                     <div class="col-md-8">
@@ -466,6 +467,26 @@
                             initData.push('{{ this._id }}')
                         </script>
                         {{/each}}
+
+                        <div class="row">
+                            <div class="col-12 my-3">
+                                <label for="collection" class="form-label">Collections</label>
+                                <select id="collection" name="collection" class="form-select"
+                                    style="height: 40px !important;">
+                                    <option value="">Chọn bộ...</option>
+                                    {{#each collections}}
+                                    {{#if this.isSelected}}
+                                    <option value="{{this._id}}" selected>{{this.name}}</option>
+                                    {{else}}
+                                    <option value="{{this._id}}">{{this.name}}</option>
+                                    {{/if}}
+                                    {{/each}}
+                                </select>
+                                <button type="button" id="btnAddCollection" class="btn btn-primary mt-3"
+                                    onclick="handleAddCollection();" style="color: white;">Add
+                                    Collection</button>
+                            </div>
+                        </div>
                     </div>
                 </div>
                 <div class="row mt-3">
@@ -485,7 +506,7 @@
                             <button type="button">Browse File</button>
                             <input type="file" name="background_medium" hidden />
                             <img style="position: absolute; z-index: 10;top: 0;right: 0;"
-                                src="{{film.background_medium}}" />
+                                src="{{film.background_medium.path}}" />
                         </div>
                     </div>
                 </div>
@@ -500,7 +521,6 @@
     </div>
     <footer class="app-footer" onload="onLoad({{error}})">
         <div class="container text-center py-3">
-            <!--/* This template is free as long as you keep the footer attribution link. If you'd like to use the template without the attribution link, you can buy the commercial license via our website: themes.3rdwavemedia.com Thank you for your support. :) */-->
         </div>
     </footer><!--//app-footer-->
 
@@ -520,6 +540,8 @@
 
     let imageThumbnail, imageBackground;
     let listCategories = [];
+    let previousCollection = $("#collection").val();
+    console.log(previousCollection)
 
     $(document).ready(function () {
 
@@ -555,10 +577,16 @@
 
         $("#buttonSubmit").attr('disabled', !canUpdate);
         $("#synopsis").attr('disabled', !canUpdate);
+        $('#collection').attr("disabled", !canUpdate);
+        $("#btnAddCollection").attr("disabled", !canUpdate);
         $("#list_category").select2({
             disabled: !canUpdate,
         })
     }
+
+    $("#collection").on('change', () => {
+        console.log(form.collection.value)
+    })
 
     handleConfirmUpdate(canUpdate);
 
@@ -575,7 +603,7 @@
             })
         } else {
             Swal.fire({
-                title: 'Đang thêm...',
+                title: 'Đang cập nhật...',
                 text: 'Vui lòng chờ...',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
@@ -586,10 +614,15 @@
 
             const formData = new FormData();
 
+            console.log("Previous Data Send: " + previousCollection);
+            console.log("Current Data Send: " + form.collection.value)
+
             formData.append("filmName", form.filmName.value);
             formData.append("trailer", form.trailer.value);
             formData.append("synopsis", form.synopsis.value);
             formData.append("total_episode", form.total_episode.value);
+            formData.append("_id_collection", form.collection.value);
+            formData.append("previous_id_collection", previousCollection);
             formData.append("list_category", JSON.stringify(listCategories));
             formData.append("thumbnail", imageThumbnail);
             formData.append("background_medium", imageBackground);
@@ -612,6 +645,7 @@
                 })
                 setTimeout(() => {
                     window.location = new URL("http://localhost:3000".concat(res.urlRedirect))
+                    //window.location.reload();
                 }, 500)
             } else {
                 Swal.fire({

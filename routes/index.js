@@ -33,7 +33,7 @@ router.post("/login", [Authentication.auth], async function (req, res, next) {
   }
 });
 
-router.post("/logout", [Authentication.auth], async function (req, res, next) {
+router.get("/logout", [Authentication.auth], async function (req, res, next) {
   try {
     req.session.destroy();
     res.redirect("/login");
