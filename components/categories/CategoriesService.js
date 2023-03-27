@@ -15,16 +15,13 @@ const getAllCategories = async () => {
 
 const addCategory = async (name) => {
   try {
-    const category = DATA.find(
-      (item) => item.name.toString() === name.toString()
-    );
-
-    if (category) {
+    const count = await CategoryModel.countDocuments({ name: name }).exec();
+    console.log("addCategory>>>>>>>: " + count);
+    if (count > 0) {
       return false;
     } else {
-      DATA.push({
-        _id: DATA.length + 1,
-        name,
+      await CategoryModel.create({
+        name: name,
       });
       return true;
     }
@@ -35,15 +32,8 @@ const addCategory = async (name) => {
 
 const deleteCategory = async (_id) => {
   try {
-    const index = DATA.findIndex(
-      (item) => item._id.toString() === _id.toString()
-    );
-    if (index) {
-      DATA.splice(index, 1);
-      return true;
-    } else {
-      return false;
-    }
+    const result = await CategoryModel.deleteOne({ _id: _id });
+    return result;
   } catch (error) {
     console.log("deleteCategory: " + error);
     return false;
@@ -52,111 +42,36 @@ const deleteCategory = async (_id) => {
 
 const updateCategory = async (_id, name) => {
   try {
-    const category = DATA.find(
-      (item) => item._id.toString() === _id.toString()
+    const result = CategoryModel.updateOne(
+      { _id: _id },
+      { $set: { name: name } }
     );
-
-    if (category) {
-      DATA.forEach((element) => {
-        if (element._id.toString() === _id.toString()) {
-          element._id = _id ? _id : element._id;
-          element.name = name ? name : element.name;
-        }
-        return element;
-      });
-      return true;
-    }
-    return false;
+    return result;
   } catch (error) {
     console.log("updateCategory: " + error);
     return false;
   }
 };
+
+const increaseCount = async (_id) => {
+  try {
+    const prevModel = CategoryModel.findById(_id);
+    const prevCount = prevModel.film_amount;
+
+    const result = await CategoryModel.updateOne(
+      { _id: _id },
+      { $set: { amount_film: (prevCount += 1) } }
+    );
+    return result;
+  } catch (error) {
+    console.log("increaseCount: " + error);
+  }
+};
+
 module.exports = {
   getAllCategories,
   addCategory,
   deleteCategory,
   updateCategory,
+  increaseCount,
 };
-const DATA = [
-  {
-    _id: 1,
-    name: "Prefabricated Aluminum Metal Canopies",
-  },
-  {
-    _id: 2,
-    name: "Termite Control",
-  },
-  {
-    _id: 3,
-    name: "Drywall & Acoustical (MOB)",
-  },
-  {
-    _id: 4,
-    name: "Asphalt Paving",
-  },
-  {
-    _id: 5,
-    name: "Glass & Glazing",
-  },
-  {
-    _id: 6,
-    name: "Structural & Misc Steel Erection",
-  },
-  {
-    _id: 7,
-    name: "Asphalt Paving",
-  },
-  {
-    _id: 8,
-    name: "Temp Fencing, Decorative Fencing and Gates",
-  },
-  {
-    _id: 9,
-    name: "Ornamental Railings",
-  },
-  {
-    _id: 10,
-    name: "Asphalt Paving",
-  },
-  {
-    _id: 11,
-    name: "Ornamental Railings",
-  },
-  {
-    _id: 12,
-    name: "Roofing (Metal)",
-  },
-  {
-    _id: 13,
-    name: "Electrical",
-  },
-  {
-    _id: 14,
-    name: "Site Furnishings",
-  },
-  {
-    _id: 15,
-    name: "Marlite Panels (FED)",
-  },
-  {
-    _id: 16,
-    name: "Retaining Wall and Brick Pavers",
-  },
-  {
-    _id: 17,
-    name: "Waterproofing & Caulking",
-  },
-  {
-    _id: 18,
-    name: "Electrical and Fire Alarm",
-  },
-  {
-    _id: 19,
-    name: "Granite Surfaces",
-  },
-  {
-    _id: 20,
-    name: "Fire Sprinkler System",
-  },
-];

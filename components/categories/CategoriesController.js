@@ -31,6 +31,14 @@ const updateCategory = async (_id, name) => {
     throw error;
   }
 };
+
+const increaseCount = async (_id) => {
+  try {
+    return await categoriesService.increaseCount(_id);
+  } catch (error) {
+    throw error;
+  }
+};
 module.exports = {
   getAllCategories,
   addCategory,
