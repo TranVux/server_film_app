@@ -540,6 +540,60 @@
         form.reset();
     }
 
+    const handleAddCollection = async () => {
+        const { value: formValues } = await Swal.fire({
+            title: 'Thêm bộ',
+            html:
+                '<input id="swal-input2" class="swal2-input">',
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input2').value
+                ]
+            }
+        })
+
+        if (formValues) {
+            Swal.fire({
+                title: 'Đang thêm...',
+                html: 'Vui lòng chờ...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+            let url = `http://localhost:3000/admin/collections/new`;
+            const value = formValues[0]
+            let bodyContent = JSON.stringify({
+                "name": value
+            });
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: bodyContent,
+            })
+
+            const data = await res.json();
+            Swal.close();
+            if (!data.error) {
+                Swal.fire({
+                    title: "Hurray!",
+                    text: "Thêm bộ thành công!",
+                    icon: "success"
+                })
+                window.location.reload();
+            } else {
+                Swal.fire({
+                    title: "Opsss!",
+                    text: "Thêm bộ thất bại!",
+                    icon: "error"
+                })
+            }
+        }
+    }
+
     const handleUploadData = async () => {
         if (
             form.filmName.length == 0 || form.synopsis.length == 0 ||

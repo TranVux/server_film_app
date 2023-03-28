@@ -7,11 +7,9 @@ const FilmModel = new FilmSchema({
   total_episode: { type: Number, default: 0 },
   score: { type: Number, default: 0.0 },
   list_category: [
-    { type: FilmSchema.Types.ObjectId, ref: "Category", default: [] },
+    { type: FilmSchema.Types.ObjectId, ref: "Category", default: {} },
   ],
-  list_episode: [
-    { type: FilmSchema.Types.ObjectId, ref: "Episode", default: [] },
-  ],
+  list_episode: [{ type: Object, default: undefined }],
   synopsis: { type: String, default: "" },
   background_medium: { type: Object, default: {} },
   thumbnail: { type: Object, default: {} },

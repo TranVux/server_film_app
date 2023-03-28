@@ -91,4 +91,19 @@ const deleteFilm = async (filmID, collectionID) => {
   }
 };
 
-module.exports = { getFilm, addFilm, getFilmById, updateFilmById, deleteFilm };
+const addEpisode = async (_id_film, name, index, video_id) => {
+  try {
+    return await filmService.addEpisode(_id_film, name, index, video_id);
+  } catch (error) {
+    console.log("addEpisode: " + error);
+  }
+};
+
+module.exports = {
+  getFilm,
+  addFilm,
+  getFilmById,
+  updateFilmById,
+  deleteFilm,
+  addEpisode,
+};

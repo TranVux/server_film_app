@@ -395,15 +395,19 @@
 
     <div class="app-content pt-3 p-md-3 p-lg-4">
         <div class="container-xl">
-
             <div class="row g-3 mb-4 align-items-center justify-content-between">
-                <div class="col-auto">
+                <div class="col-8">
                     <h1 class="app-page-title mb-0">{{title}}</h1>
                 </div>
-                <div class="col-auto">
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" role="switch" id="confirmUpdate">
-                        <label class="form-check-label" for="confirmUpdate">Update</label>
+                <div class="col-4 d-flex" style="align-items: center; justify-content: flex-end;">
+                    <div class="col-6">
+                        <div class="form-check form-switch">
+                            <input class="form-check-input" type="checkbox" role="switch" id="confirmUpdate">
+                            <label class="form-check-label" for="confirmUpdate">Update</label>
+                        </div>
+                    </div>
+                    <div class="col-6" style="width: fit-content; align-self: flex-end;">
+                        <button type="button" class="btn app-btn-primary">Add Episode</button>
                     </div>
                 </div><!--//col-auto-->
             </div><!--//row-->
@@ -565,6 +569,60 @@
         console.log(canUpdate);
         handleConfirmUpdate(canUpdate);
     })
+
+    const handleAddCollection = async () => {
+        const { value: formValues } = await Swal.fire({
+            title: 'Thêm bộ',
+            html:
+                '<input id="swal-input2" class="swal2-input">',
+            focusConfirm: false,
+            preConfirm: () => {
+                return [
+                    document.getElementById('swal-input2').value
+                ]
+            }
+        })
+
+        if (formValues) {
+            Swal.fire({
+                title: 'Đang thêm...',
+                html: 'Vui lòng chờ...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+            let url = `http://localhost:3000/admin/collections/new`;
+            const value = formValues[0]
+            let bodyContent = JSON.stringify({
+                "name": value
+            });
+
+            const res = await fetch(url, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: bodyContent,
+            })
+
+            const data = await res.json();
+            Swal.close();
+            if (!data.error) {
+                Swal.fire({
+                    title: "Hurray!",
+                    text: "Thêm bộ thành công!",
+                    icon: "success"
+                })
+                window.location.reload();
+            } else {
+                Swal.fire({
+                    title: "Opsss!",
+                    text: "Thêm bộ thất bại!",
+                    icon: "error"
+                })
+            }
+        }
+    }
 
     const handleConfirmUpdate = (canUpdate) => {
         $("form#addFilmForm input").each((index, element) => {
