@@ -95,10 +95,39 @@ const addEpisode = async (_id_film, name, index, video_id) => {
   try {
     return await filmService.addEpisode(_id_film, name, index, video_id);
   } catch (error) {
-    console.log("addEpisode: " + error);
+    throw error;
   }
 };
 
+const getEpisodeByFilmId = async (_id_film) => {
+  try {
+    return await filmService.getEpisodeByFilmId(_id_film);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getDetailEpisode = async (id_film) => {
+  try {
+    return await filmService.getDetailEpisode(id_film);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateEpisode = async (id_film, id_episode, name, video_id, index) => {
+  try {
+    return await filmService.updateEpisode(
+      id_film,
+      id_episode,
+      name,
+      video_id,
+      index
+    );
+  } catch (error) {
+    throw error;
+  }
+};
 module.exports = {
   getFilm,
   addFilm,
@@ -106,4 +135,7 @@ module.exports = {
   updateFilmById,
   deleteFilm,
   addEpisode,
+  getEpisodeByFilmId,
+  getDetailEpisode,
+  updateEpisode,
 };

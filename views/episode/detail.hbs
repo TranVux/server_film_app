@@ -333,13 +333,14 @@
                         </a><!--//nav-link-->
                         <div id="submenu-2" class="collapse submenu submenu-2 show" data-bs-parent="#menu-accordion">
                             <ul class="submenu-list list-unstyled">
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/episode/new">New
+                                <li class="submenu-item"><a class="submenu-link active" href="/admin/episode/new">New
                                         Episode</a></li>
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/episode">List Episode</a>
+                                <li class="submenu-item"><a class="submenu-link " href="/admin/episode">List
+                                        Episode</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link active"
+                                {{!-- <li class="submenu-item"><a class="submenu-link "
                                         href="/admin/episode/0/detail">Detail
-                                        Episode</a></li>
+                                        Episode</a></li> --}}
                             </ul>
                         </div>
                     </li><!--//nav-item-->
@@ -400,97 +401,122 @@
                 <div class="col-8">
                     <h1 class="app-page-title mb-0">{{title}}</h1>
                 </div>
-                <div class="col-auto">
-                    <div class="col-12">
-                        <div class="form-check form-switch">
-                            <input class="form-check-input" type="checkbox" role="switch" id="confirmUpdate">
-                            <label class="form-check-label" for="confirmUpdate">Update</label>
-                        </div>
-                    </div>
+                <div class="col-4 d-flex" style="align-items: center; justify-content: flex-end;">
+
                 </div><!--//col-auto-->
             </div><!--//row-->
         </div><!--//container-fluid-->
     </div><!--//app-content-->
 
     <div class="tab-content">
-        <div class="container rounded p-2 shadow-sm">
-            <form class="col-12 p-3" id="addFilmForm">
-                <div class="row">
-                    <div class="col-md-4">
-                        <div style="position: relative;"
-                            class="drag-image bg-primary rounded float-start img-fluid img-thumbnail">
-                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <h6 style="text-align: center;">Drag & Drop Thumbnail Film Here</h6>
-                            <span>OR</span>
-                            <button type="button">Browse File</button>
-                            <input type="file" name="thumbnail" hidden />
-                            <img style="position: absolute; z-index: 10;top: 0;right: 0;"
-                                src="{{film.thumbnail.path}}" />
+        <div class="container-xl">
+            <div class="container rounded p-2 shadow-sm">
+                <form class="col-12 p-3" id="addEpisodeForm">
+                    <div class="row">
+                        {{!-- <div class="col-md-4">
+                            <div style="position: relative;"
+                                class="drag-image bg-primary rounded float-start img-fluid img-thumbnail">
+                                <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
+                                <h6 style="text-align: center;">Drag & Drop Thumbnail Film Here</h6>
+                                <span>OR</span>
+                                <button type="button">Browse File</button>
+                                <input type="file" name="thumbnail" hidden />
+                            </div>
+                        </div> --}}
+                        <div class="col-md-12">
+                            <div class="col-12">
+                                <div class="my-3">
+                                    <label for="episodeName" class="form-label">Episode Name</label>
+                                    <input type="text" class="form-control" value="{{episode.name}}" name="episodeName"
+                                        id="episodeName">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-8">
+                                    <div class="my-3">
+                                        <label for="videoID" class="form-label">Video ID</label>
+                                        <input type="text" class="form-control" value="{{episode.video_id}}"
+                                            name="videoID" id="videoID">
+                                    </div>
+                                </div>
+                                <div class="col-4">
+                                    <div class="my-3">
+                                        <label for="indexEpisode" class="form-label">Index Episode</label>
+                                        <input type="number" class="form-control" value="{{episode.index}}"
+                                            name="indexEpisode" id="indexEpisode">
+                                    </div>
+                                </div>
+                            </div>
+                            <script>
+                                const filmID = '{{episode._id}}'.substring(0, '{{episode._id}}'.indexOf("_"))
+                                console.log(filmID)
+                            </script>
+                            <div class="row">
+                                <div class="col-12 my-3">
+                                    <label for="filmID" class="form-label">Film</label>
+                                    <select id="filmID" name="filmID" class="form-select"
+                                        style="height: 40px !important;">
+                                        <option value="">Chọn phim...</option>
+                                        {{#each films}}
+                                        <option value="{{this._id}}">{{this.name}}</option>
+                                        {{/each}}
+                                    </select>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-8">
-                        <div class="col-12">
-                            <div class="my-3">
-                                <label for="episodeName" class="form-label">Episode Name</label>
-                                <input type="text" class="form-control" value="{{episode.name}}" name="episodeName"
-                                    id="episodeName">
-                            </div>
+                    <div class=" row">
+                        <div class="col-6 mt-3">
+                            <button id="buttonSubmit" onclick="handleUpdateData()" type="button"
+                                class="btn app-btn-primary align-end">Update</button>
                         </div>
-                        <div class="col-12">
-                            <div class="my-3">
-                                <label for="videoID" class="form-label">Video ID</label>
-                                <input type="text" class="form-control" value="{{film.trailer}}" name="videoID"
-                                    id="videoID">
-                            </div>
-                        </div>
+                    </div>
+                </form>
+            </div>
 
-                        <div class="row">
-                            <div class="col-12 my-3">
-                                <label for="filmID" class="form-label">Film</label>
-                                <select id="filmID" name="filmID" class="form-select" style="height: 40px !important;">
-                                    <option value="">Chọn phim...</option>
-                                    {{#each films}}
-                                    {{#if this.isSelected}}
-                                    <option value="{{this._id}}" selected>{{this.name}}</option>
-                                    {{else}}
-                                    <option value="{{this._id}}">{{this.name}}</option>
-                                    {{/if}}
-                                    {{/each}}
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                {{!-- <div class="row mt-3">
-                    <div class="col-md-12">
-                        <label for="floatingTextarea2">Description</label>
-                        <textarea class="form-control" id="synopsis" name="synopsis"
-                            style="height: 100px">{{film.synopsis}}</textarea>
-                    </div>
-                </div> --}}
-                {{!-- <div class="row mt-3">
-                    <div class="col-12">
-                        <div class="drag-image-background bg-primary rounded container-fluid"
-                            style="width: 100%; height: 350px; position: relative;">
-                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <h6 style="text-align: center;">Drag & Drop Background Film Here</h6>
-                            <span>OR</span>
-                            <button type="button">Browse File</button>
-                            <input type="file" name="background_medium" hidden />
-                            <img style="position: absolute; z-index: 10;top: 0;right: 0;"
-                                src="{{film.background_medium.path}}" />
-                        </div>
-                    </div>
-                </div> --}}
-                <div class=" row">
-                    <div class="col-6 mt-3">
-                        <button id="buttonSubmit" type="button" onclick="handleUploadData('{{film._id}}');"
-                            class="btn app-btn-primary align-end">Update</button>
-                    </div>
-                </div>
-            </form>
+            <div class="tab-content mt-3" id="orders-table-tab-content">
+                <div class="tab-pane fade show active" id="orders-all" role="tabpanel" aria-labelledby="orders-all-tab">
+                    <div class="app-card app-card-orders-table shadow-sm mb-5">
+                        <div class="app-card-body">
+                            <div class="table-responsive">
+                                <table class="table app-table-hover mb-0 text-left">
+                                    <thead>
+                                        <tr>
+                                            <th class="cell">ID</th>
+                                            <th class="cell">Name</th>
+                                            <th class="cell">Video ID</th>
+                                            <th class="cell">Index</th>
+                                            <th class="cell">Like</th>
+                                            <th class="cell">Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="tableBody">
+                                        {{#each list_episode}}
+                                        <tr>
+                                            <td class="cell">{{this._id}}</td>
+                                            <td class="cell"><span class="truncate">{{this.name}}</span></td>
+                                            <td class="cell">{{this.video_id}}</td>
+                                            <td class="cell">{{this.index}}</td>
+                                            <td class="cell">like</td>
+                                            <td class="cell">
+                                                <button type="button" onclick="handleDetailData('{{this._id}}')"
+                                                    class="btn btn-sm btn-info" style="color: white;">Cập nhật</button>
+                                                <button type="button" onclick="handleDeleteData('{{this._id}}')"
+                                                    class="btn btn-sm btn-danger" style="color: white;">Xóa tập</button>
+                                            </td>
+                                        </tr>
+                                        {{/each}}
+                                    </tbody>
+                                </table>
+                            </div><!--//table-responsive-->
+                        </div><!--//app-card-body-->
+                    </div><!--//app-card-->
+                </div><!--//tab-pane-->
+            </div><!--//tab-content-->
         </div>
+
     </div>
+
     <footer class="app-footer" onload="onLoad({{error}})">
         <div class="container text-center py-3">
         </div>
@@ -498,138 +524,41 @@
 
 </div><!--//app-wrapper-->
 <script>
-    let canUpdate = false;
-    const form = document.querySelector("#addFilmForm");
-    const dropThumbnailArea = document.querySelector(".drag-image"),
-        dragThumbnailText = dropThumbnailArea.querySelector("h6"),
-        buttonThumbnail = dropThumbnailArea.querySelector("button"),
-        inputThumbnail = dropThumbnailArea.querySelector("input");
-
-    const dropBackgroundArea = document.querySelector(".drag-image-background"),
-        dragBackgroundText = dropBackgroundArea.querySelector("h6"),
-        buttonBackground = dropBackgroundArea.querySelector("button"),
-        inputBackground = dropBackgroundArea.querySelector("input");
-
-    let imageThumbnail, imageBackground;
-    let listCategories = [];
-    let previousCollection = $("#collection").val();
-    console.log(previousCollection)
+    const form = document.querySelector("#addEpisodeForm");
 
     $(document).ready(function () {
 
-        $('#list_category').select2({
+        $('#filmID').select2({
             width: "100%",
         }).on("change", function (e) {
-            let currentSelectedData = $('#list_category').select2('data');
-            listCategories = currentSelectedData.map(data => {
-                return {
-                    _id: data.id,
-                    name: data.text
-                }
-            })
+            let currentSelectedData = $('#filmID').select2('data');
         })
 
-        $("#list_category").val(initData).trigger('change');
+        $("#filmID").val(filmID).trigger('change');
     });
 
-    $("#confirmUpdate").on('change', () => {
-        canUpdate = !canUpdate;
-        console.log(canUpdate);
-        handleConfirmUpdate(canUpdate);
-    })
 
-    const handleAddCollection = async () => {
-        const { value: formValues } = await Swal.fire({
-            title: 'Thêm bộ',
-            html:
-                '<input id="swal-input2" class="swal2-input">',
-            focusConfirm: false,
-            preConfirm: () => {
-                return [
-                    document.getElementById('swal-input2').value
-                ]
-            }
-        })
-
-        if (formValues) {
-            Swal.fire({
-                title: 'Đang thêm...',
-                html: 'Vui lòng chờ...',
-                allowEscapeKey: false,
-                allowOutsideClick: false,
-                didOpen: () => {
-                    Swal.showLoading()
-                }
-            })
-            let url = `http://localhost:3000/admin/collections/new`;
-            const value = formValues[0]
-            let bodyContent = JSON.stringify({
-                "name": value
-            });
-
-            const res = await fetch(url, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: bodyContent,
-            })
-
-            const data = await res.json();
-            Swal.close();
-            if (!data.error) {
-                Swal.fire({
-                    title: "Hurray!",
-                    text: "Thêm bộ thành công!",
-                    icon: "success"
-                })
-                window.location.reload();
-            } else {
-                Swal.fire({
-                    title: "Opsss!",
-                    text: "Thêm bộ thất bại!",
-                    icon: "error"
-                })
-            }
-        }
+    const handleDetailData = (episodeId) => {
+        window.location.pathname = `/admin/episode/${$("#filmID").val()}/${episodeId}/update`
     }
 
-    const handleConfirmUpdate = (canUpdate) => {
-        $("form#addFilmForm input").each((index, element) => {
-            if (canUpdate) {
-                element.removeAttribute('disabled')
-            } else {
-                element.setAttribute("disabled", !canUpdate)
-            }
-        })
-
-        $("#buttonSubmit").attr('disabled', !canUpdate);
-        $("#synopsis").attr('disabled', !canUpdate);
-        $('#collection').attr("disabled", !canUpdate);
-        $("#btnAddCollection").attr("disabled", !canUpdate);
-        $("#list_category").select2({
-            disabled: !canUpdate,
-        })
+    const handleDeleteData = (episodeId) => {
+        window.location.pathname = `/admin/episode/${$("#filmID").val()}/${episodeId}/update`
     }
 
-    $("#collection").on('change', () => {
-        console.log(form.collection.value)
-    })
-
-    handleConfirmUpdate(canUpdate);
-
-    const handleUploadData = async (id) => {
+    const handleUpdateData = async (episodeId) => {
         if (
-            form.filmName.length == 0 || form.synopsis.length == 0 ||
-            form.total_episode.length == 0 || form.trailer.length == 0 ||
-            listCategories.length === 0
+            form.episodeName.value.length == 0 || form.videoID.value.length == 0 ||
+            form.filmID.value.length == 0 || form.indexEpisode.value.length == 0
         ) {
-            swal.fire({
+            Swal.fire({
                 title: "Cảnh báo!",
                 icon: "warning",
                 text: "Bạn phải điền đầy đủ thông tin vào form!"
             })
         } else {
             Swal.fire({
-                title: 'Đang cập nhật...',
+                title: 'Đang thêm...',
                 text: 'Vui lòng chờ...',
                 allowEscapeKey: false,
                 allowOutsideClick: false,
@@ -638,192 +567,43 @@
                 }
             })
 
-            const formData = new FormData();
+            const bodyContent = JSON.stringify({
+                episodeName: form.episodeName.value,
+                id_film: form.filmID.value,
+                index: form.indexEpisode.value,
+                video_id: form.videoID.value,
+            })
 
-            console.log("Previous Data Send: " + previousCollection);
-            console.log("Current Data Send: " + form.collection.value)
-
-            formData.append("filmName", form.filmName.value);
-            formData.append("trailer", form.trailer.value);
-            formData.append("synopsis", form.synopsis.value);
-            formData.append("total_episode", form.total_episode.value);
-            formData.append("_id_collection", form.collection.value);
-            formData.append("previous_id_collection", previousCollection);
-            formData.append("list_category", JSON.stringify(listCategories));
-            formData.append("thumbnail", imageThumbnail);
-            formData.append("background_medium", imageBackground);
-
-            const url = `http://localhost:3000/admin/film/${id}/update`
+            const url = `http://localhost:3000/admin/episode/new`
             const result = await fetch(url, {
                 method: 'POST',
-                body: formData,
+                body: bodyContent,
+                headers: {
+                    "Content-Type": "application/json"
+                }
             });
 
             const res = await result.json();
 
-            console.log(res);
+            console.log("res :" + res);
             Swal.close();
             if (!res.error) {
                 Swal.fire({
                     title: "Hurray!",
-                    text: "Cập nhật thành công!",
+                    text: "Thêm thành công!",
                     icon: "success"
                 })
                 setTimeout(() => {
-                    window.location = new URL("http://localhost:3000".concat(res.urlRedirect))
-                    //window.location.reload();
+                    form.reset();
                 }, 500)
             } else {
                 Swal.fire({
                     title: "Opss!",
-                    text: "Cập nhật thất bại :<!",
+                    text: "Thêm thất bại :<!",
                     icon: "error"
                 })
             }
         }
     }
 
-    function onLoad(error, categories) {
-        console.log(categories);
-        console.log("vào hàm")
-        if (Boolean(error)) {
-
-            Swal.fire({
-                title: "Có lỗi",
-                text: "Có lỗi xảy ra!",
-                icon: "error",
-            })
-        }
-    }
-
-    const uploadData = async () => {
-        const data = new FormData();
-        data.append("thumbnail", imageThumbnail);
-        fetch("http://localhost:3000/admin/film/new", {
-            method: "post",
-            headers: {
-                'Content-Type': "application/json",
-            },
-            body: data
-        });
-    }
-
-    //thumbnail
-    buttonThumbnail.onclick = (e) => {
-        e.preventDefault();
-        inputThumbnail.click();
-    }
-
-    //background
-    buttonBackground.onclick = (e) => {
-        e.preventDefault();
-        inputBackground.click();
-    }
-
-    //thumbnail
-    inputThumbnail.addEventListener("change", function () {
-        if (handNotify()) return;
-        imageThumbnail = this.files[0];
-        dropThumbnailArea.classList.add("active");
-        viewfile(dropThumbnailArea, dragThumbnailText, imageThumbnail, "thumbnail");
-    });
-
-    //background
-    inputBackground.addEventListener("change", function () {
-        if (handNotify()) return;
-        imageBackground = this.files[0];
-        dropBackgroundArea.classList.add("active");
-        viewfile(dropBackgroundArea, dragBackgroundText, imageBackground, "backgroundMedium");
-    });
-
-    //thumbnail
-    dropThumbnailArea.addEventListener("dragover", (event) => {
-        if (handNotify()) return;
-        event.preventDefault();
-        dropThumbnailArea.classList.add("active");
-        dragThumbnailText.textContent = "Release to Upload File";
-    });
-
-    //background
-    dropBackgroundArea.addEventListener("dragover", (event) => {
-        if (handNotify()) return;
-        event.preventDefault();
-        dropBackgroundArea.classList.add("active");
-        dragBackgroundText.textContent = "Release to Upload File";
-    });
-
-    //thumbnail
-    dropThumbnailArea.addEventListener("dragleave", () => {
-        if (handNotify()) return;
-        dropThumbnailArea.classList.remove("active");
-        dragThumbnailText.textContent = "Drag & Drop to Upload File";
-    });
-
-    //background
-    dropBackgroundArea.addEventListener("dragleave", () => {
-        if (handNotify()) return;
-        dropThumbnailArea.classList.remove("active");
-        dragBackgroundText.textContent = "Drag & Drop to Upload File";
-    });
-
-    //thumbnail
-    dropThumbnailArea.addEventListener("drop", (event) => {
-        if (handNotify()) return;
-        event.preventDefault();
-        imageThumbnail = event.dataTransfer.files[0];
-        viewfile(dropThumbnailArea, dragThumbnailText, imageThumbnail, "thumbnail");
-    });
-
-    //background
-    dropBackgroundArea.addEventListener("drop", (event) => {
-        if (handNotify()) return;
-        event.preventDefault();
-        imageBackground = event.dataTransfer.files[0];
-        viewfile(dropBackgroundArea, dragBackgroundText, imageBackground, "backgroundMedium");
-    });
-
-    function handNotify() {
-        if (!canUpdate) {
-            Swal.fire({
-                title: "Cảnh báo!!",
-                text: "Bạn đang ở chế độ xem nên không thể cập nhật được thông tin!",
-                icon: "warning"
-            })
-            return true;
-        }
-        return false;
-    }
-
-    function viewfile(dropArea, dragText, image, type) {
-        let fileType = image.type;
-        console.log(imageThumbnail)
-        let validExtensions = ["image/jpeg", "image/jpg", "image/png"];
-        if (validExtensions.includes(fileType)) {
-            let fileReader = new FileReader();
-            fileReader.onload = () => {
-                let fileURL = fileReader.result;
-                let imgTag = `
-                    <img style="
-                            position: absolute; 
-                            z-index: 10;
-                            top: 0;
-                            right: 0;
-                            " src="${fileURL}" />`;
-                dropArea.innerHTML += imgTag;
-
-                let container = new DataTransfer();
-                container.items.add(image);
-                if (type === "thumbnail") {
-                    form.thumbnail.files = container.files;
-                } else {
-                    form.backgroundMedium.files = container.files;
-                }
-            }
-            fileReader.readAsDataURL(image);
-        } else {
-            alert("This is not an Image File!");
-            dropArea.classList.remove("active");
-            dragText.textContent = "Drag & Drop to Upload File";
-        }
-    }
 </script>

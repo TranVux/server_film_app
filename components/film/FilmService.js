@@ -162,6 +162,47 @@ const addEpisode = async (_id_film, name, index, video_id) => {
   }
 };
 
+const getEpisodeByFilmId = async (_id_film) => {
+  try {
+    const result = await FilmModel.findById(_id_film).select(
+      "_id list_episode"
+    );
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log("getEpisodeByFilmId: " + error);
+    return null;
+  }
+};
+
+const getDetailEpisode = async (id_film) => {
+  try {
+    const film = FilmModel.findById(id_film).select("list_episode");
+    return film;
+  } catch (error) {
+    console.log("getDetailEpisode: " + error);
+    return null;
+  }
+};
+
+const updateEpisode = async (id_film, id_episode, name, video_id, index) => {
+  try {
+    const result = FilmModel.updateOne(
+      { _id: id_film, "list_episode._id": id_episode },
+      {
+        $set: {
+          "list_episode.$.name": name,
+          "list_episode.$.video_id": video_id,
+          "list_episode.$.index": index,
+        },
+      }
+    );
+
+    return result;
+  } catch (error) {
+    console.log("updateEpisode: " + error);
+  }
+};
 module.exports = {
   getFilm,
   addFilm,
@@ -169,4 +210,7 @@ module.exports = {
   updateFilmById,
   deleteFilm,
   addEpisode,
+  getEpisodeByFilmId,
+  getDetailEpisode,
+  updateEpisode,
 };

@@ -1,10 +1,10 @@
 <style>
     .pagination {
-        --bs-link-color: #15a362;
-        --bs-pagination-active-bg: #15a362;
-        --bs-pagination-active-border-color: #0e8e55;
-        --bs-pagination-focus-color: #15a362;
-        --bs-pagination-hover-color: #15a362;
+        --bs-link-color: #747f94;
+        --bs-pagination-active-bg: #747f94;
+        --bs-pagination-active-border-color: #747f94;
+        --bs-pagination-focus-color: #fff;
+        --bs-pagination-hover-color: #747f94;
     }
 
     .paginate_button.page-item.active>a:focus {
@@ -271,8 +271,9 @@
                                         Episode</a></li>
                                 <li class="submenu-item"><a class="submenu-link" href="/admin/episode">List Episode</a>
                                 </li>
-                                <li class="submenu-item"><a class="submenu-link" href="/admin/episode/0/detail">Detail
-                                        Episode</a></li>
+                                {{!-- <li class="submenu-item"><a class="submenu-link"
+                                        href="/admin/episode/0/detail">Detail
+                                        Episode</a></li> --}}
                             </ul>
                         </div>
                     </li><!--//nav-item-->
@@ -419,9 +420,9 @@
                                             <td class="cell">{{this.name}}</td>
                                             <td class="cell">
                                                 {{!-- <a class="btn btn-info" style="color:  #fff;">Detail</a> --}}
-                                                <a class="btn btn-primary" style="color:  #fff;"
+                                                <a class="btn btn-sm btn-primary" style="color:  #fff;"
                                                     onclick="updateCategory('{{this._id}}', '{{this.name}}')">Update</a>
-                                                <a class="btn btn-danger" style="color:  #fff;"
+                                                <a class="btn btn-sm btn-danger" style="color:  #fff;"
                                                     onclick="deleteCategory('{{this._id}}')">Delete</a>
                                             </td>
                                         </tr>
