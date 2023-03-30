@@ -2,7 +2,20 @@ const CategoryModel = require("./CategoriesModel");
 
 const getAllCategories = async () => {
   try {
-    const categories = await CategoryModel.find();
+    const categories = await CategoryModel.find().sort({ film_amount: -1 });
+    if (categories) {
+      return categories;
+    } else {
+      return null;
+    }
+  } catch (error) {
+    console.log("getAllCategories: " + error);
+  }
+};
+
+const getAllHasFilm = async () => {
+  try {
+    const categories = await CategoryModel.find({ film_amount: { $gte: 1 } });
     if (categories) {
       return categories;
     } else {
@@ -88,6 +101,7 @@ module.exports = {
   updateCategory,
   increaseFilmAmount,
   updateFilmAmount,
+  getAllHasFilm,
 };
 
 function intersect(a, b) {

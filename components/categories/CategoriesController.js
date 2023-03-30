@@ -39,9 +39,20 @@ const increaseCount = async (_id) => {
     throw error;
   }
 };
+
+const getCategoriesHasFilm = async () => {
+  try {
+    return await categoriesService.getAllHasFilm();
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   getAllCategories,
   addCategory,
   deleteCategory,
   updateCategory,
+  increaseCount,
+  getCategoriesHasFilm,
 };

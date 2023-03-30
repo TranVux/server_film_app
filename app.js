@@ -17,6 +17,7 @@ const adminFilmRouter = require("./routes/admin/films");
 const categoriesRouter = require("./routes/admin/categories");
 const collectionsRouter = require("./routes/admin/collections");
 const apiCategoriesRouter = require("./routes/api/categories");
+const apiFilmRouter = require("./routes/api/film");
 
 var app = express();
 app.use(
@@ -47,6 +48,7 @@ app.use("/admin/collections", collectionsRouter);
 
 app.use("/api/auth", apiAuthRouter);
 app.use("/api/categories", apiCategoriesRouter);
+app.use("/api/film", apiFilmRouter);
 //
 
 // catch 404 and forward to error handler

@@ -137,6 +137,30 @@ const updateEpisode = async (id_film, id_episode, name, video_id, index) => {
     throw error;
   }
 };
+
+const getRandomFilm = async (_limit) => {
+  try {
+    return await filmService.getRandomFilm(_limit);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getFilmByCategories = async (list_category) => {
+  try {
+    return await filmService.getFilmByCategories(list_category);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const search = async (key) => {
+  try {
+    return await filmService.search(key);
+  } catch (error) {
+    throw error;
+  }
+};
 module.exports = {
   getFilm,
   addFilm,
@@ -147,4 +171,7 @@ module.exports = {
   getEpisodeByFilmId,
   getDetailEpisode,
   updateEpisode,
+  getRandomFilm,
+  getFilmByCategories,
+  search,
 };

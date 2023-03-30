@@ -31,6 +31,42 @@ const getFilm = async (_limit, _page) => {
   }
 };
 
+const getRandomFilm = async (_limit) => {
+  try {
+    const countDocument = await FilmModel.count().exec();
+    const skip = Math.floor(Math.random() * countDocument);
+    return await FilmModel.find()
+      .skip(skip)
+      .limit(_limit ? _limit : 10);
+  } catch (error) {
+    console.log("getNewFilm: " + error);
+  }
+  return null;
+};
+
+const getFilmByCategories = async (list_category) => {
+  try {
+    return await FilmModel.find({
+      "list_category.name": { $in: list_category },
+    });
+  } catch (error) {
+    console.log("getFilmByCategories: " + error);
+  }
+  return [];
+};
+
+//always search by film_name
+const search = async (key) => {
+  try {
+    console.log(key);
+    return await FilmModel.find().where({
+      name: { $regex: key, $options: "i" },
+    });
+  } catch (error) {
+    console.log("search: " + error);
+  }
+};
+
 const addFilm = async (
   filmName,
   trailerID,
@@ -206,6 +242,7 @@ const updateEpisode = async (id_film, id_episode, name, video_id, index) => {
     console.log("updateEpisode: " + error);
   }
 };
+
 module.exports = {
   getFilm,
   addFilm,
@@ -216,4 +253,7 @@ module.exports = {
   getEpisodeByFilmId,
   getDetailEpisode,
   updateEpisode,
+  getRandomFilm,
+  getFilmByCategories,
+  search,
 };
