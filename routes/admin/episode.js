@@ -44,6 +44,7 @@ router.post("/new", [Authentication.auth], async function (req, res, next) {
       index,
       video_id
     );
+    console.log(episodeName + "  " + video_id + "  " + id_film + "  " + index);
     if (result) {
       return res
         .status(200)

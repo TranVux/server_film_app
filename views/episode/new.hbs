@@ -412,16 +412,6 @@
         <div class="container rounded p-2 shadow-sm">
             <form class="col-12 p-3" id="addEpisodeForm">
                 <div class="row">
-                    {{!-- <div class="col-md-4">
-                        <div style="position: relative;"
-                            class="drag-image bg-primary rounded float-start img-fluid img-thumbnail">
-                            <div class="icon"><i class="fas fa-cloud-upload-alt"></i></div>
-                            <h6 style="text-align: center;">Drag & Drop Thumbnail Film Here</h6>
-                            <span>OR</span>
-                            <button type="button">Browse File</button>
-                            <input type="file" name="thumbnail" hidden />
-                        </div>
-                    </div> --}}
                     <div class="col-md-12">
                         <div class="col-12">
                             <div class="my-3">
@@ -481,6 +471,7 @@
             width: "100%",
         }).on("change", function (e) {
             let currentSelectedData = $('#filmID').select2('data');
+            console.log($('#filmID').val())
         })
     });
 
@@ -507,7 +498,7 @@
 
             const bodyContent = JSON.stringify({
                 episodeName: form.episodeName.value,
-                id_film: form.filmID.value,
+                id_film: $('#filmID').val(),
                 index: form.indexEpisode.value,
                 video_id: form.videoID.value,
             })

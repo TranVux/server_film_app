@@ -1,5 +1,7 @@
 const mongoose = require("mongoose");
+
 const FilmSchema = mongoose.Schema;
+
 const FilmModel = new FilmSchema({
   name: { type: String, default: "" },
   trailer: { type: String },
@@ -7,7 +9,10 @@ const FilmModel = new FilmSchema({
   total_episode: { type: Number, default: 0 },
   score: { type: Number, default: 0.0 },
   list_category: [
-    { type: FilmSchema.Types.ObjectId, ref: "Category", default: {} },
+    {
+      _id: FilmSchema.Types.ObjectId,
+      name: String,
+    },
   ],
   list_episode: [{ type: Object, default: undefined }],
   synopsis: { type: String, default: "" },

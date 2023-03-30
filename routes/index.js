@@ -1,6 +1,7 @@
 var express = require("express");
 var router = express.Router();
-const jwt = require("jsonwebtoken");
+var jwt = require("jsonwebtoken");
+const got = require("got");
 
 const AuthController = require("../components/auth/AuthController");
 const Authentication = require("../middlewares/Authentication");

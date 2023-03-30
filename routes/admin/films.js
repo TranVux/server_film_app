@@ -10,20 +10,24 @@ const collectionController = require("../../components/collections/CollectionCon
 // add middle ware after complete this function
 //http://localhost:3000/admin/film?limit=10&page=1
 router.get("/", [Authentication.auth], async function (req, res, next) {
-  const { limit, page } = req.query;
-  const result = await filmController.getFilm(limit, page);
-  if (result.totalPage) {
-    let totalPage = [];
-    for (let i = 1; i <= result.totalPage; i++) {
-      totalPage.push({
-        index: i,
-        isCurrent: Number(i) === Number(page),
-      });
-    }
+  try {
+    const { limit, page } = req.query;
+    const result = await filmController.getFilm(limit, page);
+    if (result.totalPage) {
+      let totalPage = [];
+      for (let i = 1; i <= result.totalPage; i++) {
+        totalPage.push({
+          index: i,
+          isCurrent: Number(i) === Number(page),
+        });
+      }
 
-    result.totalPage = totalPage;
+      result.totalPage = totalPage;
+    }
+    res.render("film/list", { title: "List Film", filmList: result });
+  } catch (error) {
+    next(error);
   }
-  res.render("film/list", { title: "List Film", filmList: result });
   // res.json({ title: "List Film", filmList: result });
 });
 
@@ -161,6 +165,7 @@ router.post(
       const {
         filmName,
         list_category,
+        previous_list_category,
         trailer,
         total_episode,
         synopsis,
@@ -169,9 +174,10 @@ router.post(
       } = req.body;
       const { id } = req.params;
       const { files } = req;
-      // if (files) {
       // console.log("ID>>>>>>>>>>>>>>>>>>>: " + id);
-      console.log("PreviousID>>>>>>>>>>>>>>>>>>>: " + previous_id_collection);
+      // console.log("PreviousID>>>>>>>>>>>>>>>>>>>: " + previous_id_collection);
+      // console.log("PreviousID>>>>>>>>>>>>>>>>>>>: " + previous_list_category);
+      // console.log("PreviousID>>>>>>>>>>>>>>>>>>>: " + list_category);
       // console.log("FILE>>>>>>>>>>>>>>>>>>>: ");
       // console.log(files);
       const result = await filmController.updateFilmById(
@@ -180,6 +186,7 @@ router.post(
         trailer,
         total_episode,
         JSON.parse(list_category),
+        JSON.parse(previous_list_category),
         synopsis,
         _id_collection,
         previous_id_collection,
@@ -200,12 +207,11 @@ router.post(
           error: true,
         });
       }
-      // }
     } catch (error) {
       console.log("LOG: UPDATE FILM FAILURE!");
       console.log(error);
       res.json({
-        result: result,
+        result: null,
         urlRedirect: "/",
         error: true,
       });

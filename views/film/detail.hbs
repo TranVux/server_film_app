@@ -408,7 +408,7 @@
                         </div>
                     </div>
                     <div class="col-6" style="width: fit-content; align-self: flex-end;">
-                        <button type="button" class="btn app-btn-primary">Add Episode</button>
+                        <a href="/admin/episode/new" type="button" class="btn app-btn-primary">Add Episode</a>
                     </div>
                 </div><!--//col-auto-->
             </div><!--//row-->
@@ -469,7 +469,7 @@
                         </div>
                         {{#each film.list_category}}
                         <script>
-                            initData.push('{{ this._id }}')
+                            initData.push({ "_id": '{{ this._id }}', "name": '{{this.name}}' })
                         </script>
                         {{/each}}
 
@@ -562,7 +562,8 @@
             })
         })
 
-        $("#list_category").val(initData).trigger('change');
+        $("#list_category").val(initData.map(value => value._id)).trigger('change');
+        console.log(initData)
     });
 
     $("#confirmUpdate").on('change', () => {
@@ -671,47 +672,51 @@
                 }
             })
 
-            const formData = new FormData();
+            const bodyContents = new FormData();
 
             console.log("Previous Data Send: " + previousCollection);
             console.log("Current Data Send: " + form.collection.value)
 
-            formData.append("filmName", form.filmName.value);
-            formData.append("trailer", form.trailer.value);
-            formData.append("synopsis", form.synopsis.value);
-            formData.append("total_episode", form.total_episode.value);
-            formData.append("_id_collection", form.collection.value);
-            formData.append("previous_id_collection", previousCollection);
-            formData.append("list_category", JSON.stringify(listCategories));
-            formData.append("thumbnail", imageThumbnail);
-            formData.append("background_medium", imageBackground);
+            bodyContents.append("filmName", form.filmName.value);
+            bodyContents.append("trailer", form.trailer.value);
+            bodyContents.append("synopsis", form.synopsis.value);
+            bodyContents.append("total_episode", form.total_episode.value);
+            bodyContents.append("_id_collection", form.collection.value);
+            bodyContents.append("previous_id_collection", previousCollection);
+            bodyContents.append("list_category", JSON.stringify(listCategories));
+            bodyContents.append("previous_list_category", JSON.stringify(initData));
+            bodyContents.append("thumbnail", imageThumbnail);
+            bodyContents.append("background_medium", imageBackground);
 
-            const url = `http://localhost:3000/admin/film/${id}/update`
-            const result = await fetch(url, {
+            const url = `http://localhost:3000/admin/film/${id}/update`;
+            const res = await fetch(url, {
                 method: 'POST',
-                body: formData,
+                body: bodyContents,
             });
 
-            const res = await result.json();
-
-            console.log(res);
-            Swal.close();
-            if (!res.error) {
-                Swal.fire({
-                    title: "Hurray!",
-                    text: "Cập nhật thành công!",
-                    icon: "success"
-                })
-                setTimeout(() => {
-                    window.location = new URL("http://localhost:3000".concat(res.urlRedirect))
-                    //window.location.reload();
-                }, 500)
-            } else {
-                Swal.fire({
-                    title: "Opss!",
-                    text: "Cập nhật thất bại :<!",
-                    icon: "error"
-                })
+            try {
+                const result = await res.json();
+                console.log(result);
+                Swal.close();
+                if (!result.error) {
+                    Swal.fire({
+                        title: "Hurray!",
+                        text: "Cập nhật thành công!",
+                        icon: "success"
+                    })
+                    setTimeout(() => {
+                        window.location = new URL("http://localhost:3000".concat(result.urlRedirect))
+                        //window.location.reload();
+                    }, 500)
+                } else {
+                    Swal.fire({
+                        title: "Opss!",
+                        text: "Cập nhật thất bại :<!",
+                        icon: "error"
+                    })
+                }
+            } catch (e) {
+                console.log(e);
             }
         }
     }

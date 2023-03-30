@@ -1,41 +1,62 @@
+const UserModel = require("./AuthModel");
+const bcrypt = require("bcryptjs");
+
 const login = async (email, password) => {
   try {
-    const user = DATA.find(
-      (user) => user.email.toString() === email.toString()
-    );
-
+    const user = await UserModel.findOne({ email: email });
     if (user) {
-      if (user.password.toString() === password.toString()) {
-        return user;
+      const compare = bcrypt.compareSync(password, user.password);
+      if (compare) {
+        return user._doc;
       }
-    } else {
-      return null;
     }
   } catch (error) {
     console.log("LOGIN ERROR>>>>>: " + error);
     return null;
   }
+  return null;
 };
 
-module.exports = { login };
+const register = async (username, email, password) => {
+  try {
+    const user = await UserModel.findOne({ email: email });
+    console.log(user);
+    if (!user) {
+      const salt = bcrypt.genSaltSync(10);
+      const hasPass = bcrypt.hashSync(password, salt);
 
-const DATA = [
-  {
-    id: 1,
-    name: "Trần Anh Vũ",
-    email: "abc@gmail.com",
-    password: 1234,
-  },
-  {
-    id: 2,
-    name: "Trần Anh B",
-    email: "xyz@gmail.com",
-    password: 1234,
-  },
-  {
-    id: 3,
-    name: "Trần Anh A",
-    email: "asd@gmail.com",
-    password: 1234,
-  },
-];
+      const user = await UserModel.create({
+        user_name: username,
+        email,
+        password: hasPass,
+      });
+      return user._doc;
+    }
+  } catch (error) {
+    console.log("register>>>>>>>Error: " + error);
+    return null;
+  }
+
+  return null;
+};
+
+const changePassword = async (user_id, oldPass, newPassword) => {
+  try {
+    const user = await UserModel.findOne({ _id: user_id });
+    const salt = bcrypt.genSaltSync(10);
+    if (user) {
+      const compare = bcrypt.compareSync(oldPass, user.password);
+      if (compare) {
+        const hasPass = bcrypt.hashSync(newPassword, salt);
+        user.password = hasPass;
+        await user.save();
+        return true;
+      }
+    }
+  } catch (error) {
+    console.log("changePassword" + error);
+  }
+  return false;
+};
+
+module.exports = { login, register, changePassword };

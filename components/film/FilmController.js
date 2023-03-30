@@ -1,5 +1,6 @@
 const filmService = require("./FilmService");
 const collectionService = require("../collections/CollectionService");
+const categoriesService = require("../categories/CategoriesService");
 
 const getFilm = async (_limit, _page) => {
   try {
@@ -38,7 +39,11 @@ const addFilm = async (
     );
     // console.log("Film ID: " + filmResult);
     const collectionResult = await collectionService.addFilm(filmResult);
+    const categoriesResult = await categoriesService.increaseFilmAmount(
+      list_category.map((value) => value._id)
+    );
     console.log("CollectionResult: " + collectionResult);
+    console.log("CategoriesResult: " + categoriesResult);
     return filmResult;
   } catch (error) {
     throw error;
@@ -51,6 +56,7 @@ const updateFilmById = async (
   trailerID,
   total_episode,
   list_category,
+  previous_list_category,
   synopsis,
   _id_collection,
   previous_id_collection,
@@ -71,7 +77,10 @@ const updateFilmById = async (
       imageList
     );
     await collectionService.updateFilm(previous_id_collection, _id);
-
+    await categoriesService.updateFilmAmount(
+      previous_list_category.map((value) => value._id),
+      list_category.map((value) => value._id)
+    );
     return result;
   } catch (error) {
     throw error;

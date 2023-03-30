@@ -146,16 +146,19 @@ const deleteFilm = async (id) => {
 const addEpisode = async (_id_film, name, index, video_id) => {
   try {
     const now = new Date().getTime();
-    const result = await FilmModel.findOneAndUpdate(_id_film, {
-      $push: {
-        list_episode: {
-          _id: _id_film + "_" + now,
-          name,
-          index,
-          video_id,
+    const result = await FilmModel.findOneAndUpdate(
+      { _id: _id_film },
+      {
+        $push: {
+          list_episode: {
+            _id: _id_film + "_" + now,
+            name,
+            index,
+            video_id,
+          },
         },
-      },
-    });
+      }
+    );
     return result;
   } catch (error) {
     console.log("addEpisode: " + error);
