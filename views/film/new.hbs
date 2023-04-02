@@ -665,7 +665,7 @@
                     icon: "success"
                 })
                 setTimeout(() => {
-                    window.location = new URL(res.urlRedirect)
+                    window.location.pathname = "/admin/film?limit=10&page=1"
                 }, 500)
             } else {
                 Swal.fire({

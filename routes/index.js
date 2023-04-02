@@ -23,11 +23,12 @@ router.post("/login", [Authentication.auth], async function (req, res, next) {
     const user = await AuthController.login(email, password);
     if (user) {
       const token = jwt.sign({ id: user.id }, "secret");
-      res.cookie("access_token", token, {
-        httpOnly: true,
-        secure: "production",
-      });
-      res.redirect("/");
+      res
+        .cookie("access_token", token, {
+          httpOnly: true,
+          secure: "production",
+        })
+        .redirect("/");
     } else {
       res.redirect("/login");
     }
