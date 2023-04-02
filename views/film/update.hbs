@@ -645,7 +645,11 @@
                     icon: "success"
                 })
                 setTimeout(() => {
-                    window.location.pathname = "/admin/film?limit=10&page=1"
+                    let bareUrl = window.location.host;
+                    let startUrl = bareUrl.includes("localhost") ? "http://" : "https://";
+
+                    console.log(bareUrl);
+                    window.location.assign(new URL(startUrl.concat(bareUrl).concat(result.urlRedirect)));
                 }, 500)
             } else {
                 Swal.fire({

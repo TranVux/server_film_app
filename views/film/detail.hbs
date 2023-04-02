@@ -705,8 +705,11 @@
                         icon: "success"
                     })
                     setTimeout(() => {
-                        window.location = new URL(result.urlRedirect)
-                        //window.location.reload();
+                        let bareUrl = window.location.host;
+                        let startUrl = bareUrl.includes("localhost") ? "http://" : "https://";
+
+                        console.log(bareUrl);
+                        window.location.assign(new URL(startUrl.concat(bareUrl).concat(result.urlRedirect)));
                     }, 500)
                 } else {
                     Swal.fire({
