@@ -564,7 +564,7 @@
                     Swal.showLoading()
                 }
             })
-            let url = `http://localhost:3000/admin/collections/new`;
+            let url = `/admin/collections/new`;
             const value = formValues[0]
             let bodyContent = JSON.stringify({
                 "name": value
@@ -628,7 +628,7 @@
             formData.append("thumbnail", imageThumbnail);
             formData.append("background_medium", imageBackground);
 
-            const url = 'http://localhost:3000/admin/film/new'
+            const url = '/admin/film/new'
             const result = await fetch(url, {
                 method: 'POST',
                 body: formData,
@@ -645,7 +645,7 @@
                     icon: "success"
                 })
                 setTimeout(() => {
-                    window.location = new URL("http://localhost:3000".concat(res.urlRedirect))
+                    window.location = new URL(res.urlRedirect)
                 }, 500)
             } else {
                 Swal.fire({
@@ -673,7 +673,7 @@
     const uploadData = async () => {
         const data = new FormData();
         data.append("thumbnail", imageThumbnail);
-        fetch("http://localhost:3000/admin/film/new", {
+        fetch("/admin/film/new", {
             method: "post",
             headers: {
                 'Content-Type': "application/json",

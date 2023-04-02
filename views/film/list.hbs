@@ -536,7 +536,7 @@
                 "_id": filmID,
                 _id_collection
             })
-            const res = await fetch("http://localhost:3000/admin/film/delete", {
+            const res = await fetch("/admin/film/delete", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: bodyContent

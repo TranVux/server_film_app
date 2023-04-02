@@ -32,7 +32,7 @@ router.get("/", [Authentication.auth], async function (req, res, next) {
 });
 
 //http://localhost:3000/admin/film/new
-router.get("/new", async function (req, res, next) {
+router.get("/new", [Authentication.auth], async function (req, res, next) {
   try {
     const result = await categoryController.getAllCategories();
     const collections = await collectionController.getAllCollection();
@@ -52,6 +52,7 @@ router.get("/new", async function (req, res, next) {
 router.post(
   "/new",
   [
+    Authentication.auth,
     uploadImage.fields([
       { name: "thumbnail", maxCount: 1 },
       { name: "background_medium", maxCount: 1 },
@@ -155,6 +156,7 @@ router.get(
 router.post(
   "/:id/update",
   [
+    Authentication.auth,
     uploadImage.fields([
       { name: "thumbnail", maxCount: 1 },
       { name: "background_medium", maxCount: 1 },
@@ -219,7 +221,7 @@ router.post(
   }
 );
 
-//http://localhost:3000/admin/film//delete
+//http://localhost:3000/admin/film/delete
 router.post("/delete", [Authentication.auth], async (req, res, next) => {
   const { _id, _id_collection } = req.body;
   try {

@@ -503,7 +503,7 @@
                 video_id: form.videoID.value,
             })
 
-            const url = `http://localhost:3000/admin/episode/new`
+            const url = `/admin/episode/new`
             const result = await fetch(url, {
                 method: 'POST',
                 body: bodyContent,

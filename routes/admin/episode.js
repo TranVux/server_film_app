@@ -13,7 +13,7 @@ router.get("/", [Authentication.auth], async function (req, res, next) {
   }
 });
 
-router.post("/:id_film/list", async (req, res, next) => {
+router.post("/:id_film/list", [Authentication.auth], async (req, res, next) => {
   try {
     const { id_film } = req.params;
     const result = await filmController.getEpisodeByFilmId(id_film);
@@ -127,13 +127,17 @@ router.get(
 );
 
 //http://localhost:3000/admin/episode/:id_film/:id_episode/delete
-router.post("/:id_film/:id_episode/delete", async (req, res, next) => {
-  try {
-    const { id_film, id_episode } = req.params;
-    const result = await filmController.deleteEpisode(id_film, id_episode);
-    res.status(200).json({ result: result, error: false });
-  } catch (error) {
-    res.status(400).json({ error: true });
+router.post(
+  "/:id_film/:id_episode/delete",
+  [Authentication.auth],
+  async (req, res, next) => {
+    try {
+      const { id_film, id_episode } = req.params;
+      const result = await filmController.deleteEpisode(id_film, id_episode);
+      res.status(200).json({ result: result, error: false });
+    } catch (error) {
+      res.status(400).json({ error: true });
+    }
   }
-});
+);
 module.exports = router;

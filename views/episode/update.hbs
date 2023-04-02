@@ -648,7 +648,7 @@
                 video_id: form.videoID.value,
             })
 
-            const url = `http://localhost:3000/admin/episode/${$("#filmID").val()}/${episodeId}/update`
+            const url = `/admin/episode/${$("#filmID").val()}/${episodeId}/update`
             console.log(url)
             const result = await fetch(url, {
                 method: 'POST',

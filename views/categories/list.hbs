@@ -493,7 +493,7 @@
                     Swal.showLoading()
                 }
             })
-            let url = `http://localhost:3000/admin/categories/${_id}/update`;
+            let url = `/admin/categories/${_id}/update`;
 
             try {
                 const res = await fetch(url, {
@@ -538,7 +538,7 @@
                 Swal.showLoading()
             }
         })
-        const url = `http://localhost:3000/admin/categories/${_id}/delete`;
+        const url = `/admin/categories/${_id}/delete`;
         const headerList = {
             'Content-Type': 'application/json'
         }
@@ -610,7 +610,7 @@
                     Swal.showLoading()
                 }
             })
-            let url = `http://localhost:3000/admin/categories/new`;
+            let url = `/admin/categories/new`;
             const value = formValues[0]
             let bodyContent = JSON.stringify({
                 "name": value
