@@ -39,8 +39,9 @@ const addFilm = async (
     );
     // console.log("Film ID: " + filmResult);
     const collectionResult = await collectionService.addFilm(filmResult);
-    const categoriesResult = await categoriesService.increaseFilmAmount(
-      list_category.map((value) => value._id)
+    const categoriesResult = await categoriesService.modifyFilmAmount(
+      list_category.map((value) => value._id),
+      1
     );
     console.log("CollectionResult: " + collectionResult);
     console.log("CategoriesResult: " + categoriesResult);
@@ -87,14 +88,18 @@ const updateFilmById = async (
   }
 };
 
-const deleteFilm = async (filmID, collectionID) => {
+const deleteFilm = async (filmID, collectionID, list_category) => {
   try {
     const resultFilm = await filmService.deleteFilm(filmID);
     const resultCollection = await collectionService.deleteFilm(
       filmID,
       collectionID
     );
-    return resultCollection && resultFilm;
+    const resultCategories = await categoriesService.modifyFilmAmount(
+      list_category,
+      -1
+    );
+    return resultCollection && resultFilm && resultCategories;
   } catch (error) {
     throw error;
   }
@@ -162,17 +167,26 @@ const search = async (key) => {
   }
 };
 
+const deleteEpisode = async (id_film, id_episode) => {
+  try {
+    return await filmService.deleteEpisode(id_film, id_episode);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
-  getFilm,
   addFilm,
+  getFilm,
   getFilmById,
-  updateFilmById,
-  deleteFilm,
+  getRandomFilm,
+  getFilmByCategories,
   addEpisode,
   getEpisodeByFilmId,
   getDetailEpisode,
-  updateEpisode,
-  getRandomFilm,
-  getFilmByCategories,
   search,
+  updateFilmById,
+  updateEpisode,
+  deleteFilm,
+  deleteEpisode,
 };

@@ -501,7 +501,7 @@
                                             <td class="cell">
                                                 <button type="button" onclick="handleDetailData('{{this._id}}')"
                                                     class="btn btn-sm btn-info" style="color: white;">Cập nhật</button>
-                                                <button type="button" onclick="handleDeleteData('{{this._id}}')"
+                                                <button type="button" onclick="confirmDeleteEpisode('{{this._id}}')"
                                                     class="btn btn-sm btn-danger" style="color: white;">Xóa tập</button>
                                             </td>
                                         </tr>
@@ -542,8 +542,74 @@
         window.location.pathname = `/admin/episode/${$("#filmID").val()}/${episodeId}/update`
     }
 
-    const handleDeleteData = (episodeId) => {
-        window.location.pathname = `/admin/episode/${$("#filmID").val()}/${episodeId}/update`
+    const confirmDeleteEpisode = async (episodeId) => {
+        try {
+            Swal.fire({
+                title: "Xác nhận?",
+                text: "Khi xóa xong bạn không thể nào khôi phục dữ liệu bị xóa được nữa!",
+                icon: "warning",
+                showCloseButton: true,
+                showCancelButton: true,
+            }).then((result) => {
+                if (!result.isConfirmed) {
+                    Swal.fire({
+                        title: "Hurray!!",
+                        text: "Dữ liệu của bạn vẫn được giữ nguyên!",
+                        icon: "success",
+                    });
+                } else {
+                    handleDeleteEpisode(episodeId)
+                }
+            });
+        }
+        catch (error) {
+            console.log(error);
+        }
+    }
+
+    const handleDeleteEpisode = async (episodeId) => {
+        try {
+            Swal.fire({
+                title: 'Đang xóa...',
+                text: 'Vui lòng chờ...',
+                allowEscapeKey: false,
+                allowOutsideClick: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            })
+
+            const url = `/admin/episode/${$("#filmID").val()}/${episodeId}/delete`
+            const headerList = {
+                "Content-Type": "application/json"
+            }
+
+            const res = await fetch(url, {
+                headers: headerList,
+                method: "POST"
+            });
+
+            Swal.close();
+            const result = await res.json();
+            if (!result.error) {
+                Swal.fire({
+                    title: "Hurray!",
+                    text: "Xóa thành công!",
+                    icon: "success"
+                })
+                setTimeout(() => {
+                    window.location.pathname = `/admin/episode`
+                }, 500)
+            } else {
+                Swal.fire({
+                    title: "Opss!",
+                    text: "Xóa thất bại :<!",
+                    icon: "error"
+                })
+            }
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     const handleUpdateData = async (episodeId) => {

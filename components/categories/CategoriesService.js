@@ -66,29 +66,23 @@ const updateCategory = async (_id, name) => {
   }
 };
 
-const increaseFilmAmount = async (id_arr) => {
+//type = 1 => increase || type = -1 => decrease
+const modifyFilmAmount = async (id_arr, type = 1) => {
   try {
-    const result = await CategoryModel.updateMany(
+    return await CategoryModel.updateMany(
       { _id: { $in: id_arr } },
-      { $inc: { film_amount: 1 } },
+      { $inc: { film_amount: type } },
       { multi: true }
     );
-    return result;
   } catch (error) {
-    console.log("increaseCount: " + error);
+    console.log("modifyFilmAmount: " + error);
   }
-  return false;
 };
 
 const updateFilmAmount = async (prev_id_arr = [], id_arr) => {
   try {
-    //update later
-    await CategoryModel.updateMany(
-      { _id: { $in: prev_id_arr } },
-      { $inc: { film_amount: -1 } },
-      { multi: true }
-    );
-    return await increaseFilmAmount(id_arr);
+    await modifyFilmAmount(prev_id_arr, -1);
+    return await modifyFilmAmount(id_arr, 1);
   } catch (error) {
     console.log("updateFilmAmount: " + error);
   }
@@ -99,9 +93,9 @@ module.exports = {
   addCategory,
   deleteCategory,
   updateCategory,
-  increaseFilmAmount,
   updateFilmAmount,
   getAllHasFilm,
+  modifyFilmAmount,
 };
 
 function intersect(a, b) {

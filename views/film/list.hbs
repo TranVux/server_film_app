@@ -544,9 +544,15 @@
 
             const result = await res.json();
             if (!result.error) {
+                Swal.fire({
+                    title: "Hurray!!",
+                    text: "Xóa thành công!!",
+                    icon: "success",
+                });
+
                 setTimeout(() => {
                     window.location.reload();
-                }, 500)
+                }, 1000)
             }
             Swal.close();
             console.log(result)

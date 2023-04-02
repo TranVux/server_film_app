@@ -243,17 +243,33 @@ const updateEpisode = async (id_film, id_episode, name, video_id, index) => {
   }
 };
 
+const deleteEpisode = async (id_film, id_episode) => {
+  try {
+    return await FilmModel.updateOne(
+      {
+        _id: id_film,
+      },
+      {
+        $pull: { list_episode: { _id: id_episode } },
+      }
+    );
+  } catch (error) {
+    console.log("deleteEpisode: " + error);
+  }
+};
+
 module.exports = {
-  getFilm,
-  addFilm,
-  getFilmById,
-  updateFilmById,
-  deleteFilm,
   addEpisode,
+  addFilm,
+  getFilm,
+  getFilmById,
   getEpisodeByFilmId,
   getDetailEpisode,
-  updateEpisode,
   getRandomFilm,
   getFilmByCategories,
   search,
+  updateEpisode,
+  updateFilmById,
+  deleteFilm,
+  deleteEpisode,
 };
