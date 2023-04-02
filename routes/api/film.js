@@ -40,9 +40,21 @@ router.get("/search", async (req, res, next) => {
   try {
     const { key } = req.query;
     const result = await filmController.search(key);
-    return res.status(200).json({ result, error: false });
+    return res.status(200).json({ data: result, error: false });
   } catch (error) {
     return res.status(400).json({ error: true });
   }
 });
+
+//http://localhost:3000/api/film/:id/detail
+router.get("/:_id/detail", async (req, res, next) => {
+  try {
+    const { _id } = req.params;
+    const result = await filmController.getFilmById(_id);
+    return res.status(200).json({ data: result, error: false });
+  } catch (error) {
+    return res.status(400).json({ error: true });
+  }
+});
+
 module.exports = router;

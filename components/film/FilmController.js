@@ -161,6 +161,7 @@ const search = async (key) => {
     throw error;
   }
 };
+
 module.exports = {
   getFilm,
   addFilm,
