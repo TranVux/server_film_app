@@ -23,7 +23,10 @@ router.post("/login", [Authentication.auth], async function (req, res, next) {
     const user = await AuthController.login(email, password);
     if (user) {
       const token = jwt.sign({ id: user.id }, "secret");
-      req.session.token = token;
+      res.cookie("access_token", token, {
+        httpOnly: true,
+        secure: "production",
+      });
       res.redirect("/");
     } else {
       res.redirect("/login");
@@ -35,8 +38,7 @@ router.post("/login", [Authentication.auth], async function (req, res, next) {
 
 router.get("/logout", [Authentication.auth], async function (req, res, next) {
   try {
-    req.session.destroy();
-    res.redirect("/login");
+    res.clearCookie("access_token").redirect("/login");
   } catch (error) {
     console.log(error);
   }

@@ -1,16 +1,11 @@
 const jwt = require("jsonwebtoken");
 
 const auth = (req, res, next) => {
-  const { session } = req;
+  const token = req.cookies.access_token;
+
   const url = req.originalUrl.toLowerCase();
-  if (!session) {
-    if (url.includes("login")) {
-      next();
-    } else {
-      res.redirect("/login");
-    }
-  } else {
-    const { token } = session;
+  console.log(url);
+  try {
     if (!token) {
       if (url.includes("login")) {
         next();
@@ -34,8 +29,9 @@ const auth = (req, res, next) => {
         }
       });
     }
+  } catch (error) {
+    console.log("Authentication Error: " + error);
   }
-  // next();
 };
 
 module.exports = { auth };

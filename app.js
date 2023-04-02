@@ -3,7 +3,6 @@ var express = require("express");
 var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
-const session = require("express-session");
 
 //database config
 const db = require("./configs/db");
@@ -20,14 +19,9 @@ const apiCategoriesRouter = require("./routes/api/categories");
 const apiFilmRouter = require("./routes/api/film");
 
 var app = express();
-app.use(
-  session({
-    secret: "session",
-    resave: true,
-    saveUninitialized: true,
-    cookie: { secure: false },
-  })
-);
+
+//setup cookie parser
+app.use(cookieParser());
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
