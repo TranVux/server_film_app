@@ -24,4 +24,25 @@ const changePassword = async (user_id, oldPassword, newPassword) => {
   }
 };
 
-module.exports = { login, register, changePassword };
+const getCollection = async (user_id) => {
+  try {
+    return await AuthService.getCollection(user_id);
+  } catch (error) {
+    throw error;
+  }
+};
+
+const addFilmCollection = async (user_id, film_id) => {
+  try {
+    return await AuthService.addFilmCollection(user_id, film_id);
+  } catch (error) {
+    throw error;
+  }
+};
+module.exports = {
+  login,
+  register,
+  changePassword,
+  getCollection,
+  addFilmCollection,
+};

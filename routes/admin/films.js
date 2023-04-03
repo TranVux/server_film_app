@@ -19,12 +19,14 @@ router.get("/", [Authentication.auth], async function (req, res, next) {
         totalPage.push({
           index: i,
           isCurrent: Number(i) === Number(page),
+          limit,
         });
       }
 
       result.totalPage = totalPage;
     }
     res.render("film/list", { title: "List Film", filmList: result });
+    // res.json({ title: "List Film", filmList: result });
   } catch (error) {
     next(error);
   }

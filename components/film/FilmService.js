@@ -13,14 +13,14 @@ const getFilm = async (_limit, _page) => {
       const totalPage = Math.ceil(countOfDocument / Number(_limit));
 
       const result = {};
-
       result.totalPage = totalPage;
+      result.limit = Number(_limit);
       if (endIndex < countOfDocument) {
-        result.next = { page: Number(_page) + 1, limit: _limit };
+        result.next = { page: Number(_page) + 1 };
       }
 
       if (startIndex > 0) {
-        result.previous = { page: Number(_page) - 1, limit: _limit };
+        result.previous = { page: Number(_page) - 1 };
       }
       result.data = await FilmModel.find().skip(startIndex).limit(_limit);
 

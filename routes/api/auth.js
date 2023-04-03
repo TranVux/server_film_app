@@ -53,4 +53,26 @@ router.post("/change_password", [], async function (req, res, next) {
     return res.status(400).json({ error: true });
   }
 });
+
+router.get("/collections/:user_id", [], async (req, res, next) => {
+  try {
+    const { user_id } = req.params;
+    // console.log(user_id);
+    const collection = await AuthController.getCollection(user_id);
+    res.status(200).json({ data: collection, error: false });
+  } catch (error) {
+    res.status(400).json({ error: true });
+  }
+});
+
+router.post("/collections/add", [], async (req, res, next) => {
+  try {
+    const { user_id, film_id } = req.body;
+    const result = await AuthController.addFilmCollection(user_id, film_id);
+    res.status(200).json({ success: result, error: false });
+  } catch (error) {
+    res.status(400).json({ error: true });
+  }
+});
+
 module.exports = router;

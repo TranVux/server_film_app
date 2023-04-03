@@ -1,3 +1,4 @@
+const AuthModel = require("./AuthModel");
 const UserModel = require("./AuthModel");
 const bcrypt = require("bcryptjs");
 
@@ -59,4 +60,42 @@ const changePassword = async (user_id, oldPass, newPassword) => {
   return false;
 };
 
-module.exports = { login, register, changePassword };
+const getCollection = async (user_id) => {
+  try {
+    const result = await AuthModel.findById(user_id).select("collections");
+    if (!result) {
+      return [];
+    }
+    return result;
+  } catch (error) {
+    console.log("getCollection: " + error);
+  }
+};
+
+const addFilmCollection = async (user_id, film_id) => {
+  try {
+    const whereQuery = `!this.collections.some(_id => _id === ${film_id})`;
+    const result = await AuthModel.updateOne(
+      {
+        _id: user_id,
+      },
+      {
+        $addToSet: { collections: film_id },
+      }
+    );
+    if (result.matchedCount > 0) {
+      if (result.modifiedCount > 0) return true;
+      else return false;
+    }
+  } catch (error) {
+    console.log("addItemCollection: " + error);
+  }
+};
+
+module.exports = {
+  login,
+  register,
+  changePassword,
+  getCollection,
+  addFilmCollection,
+};
