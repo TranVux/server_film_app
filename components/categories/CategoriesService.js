@@ -89,12 +89,12 @@ const updateFilmAmount = async (prev_id_arr = [], id_arr) => {
 };
 
 module.exports = {
-  getAllCategories,
   addCategory,
+  getAllCategories,
+  getAllHasFilm,
   deleteCategory,
   updateCategory,
   updateFilmAmount,
-  getAllHasFilm,
   modifyFilmAmount,
 };
 

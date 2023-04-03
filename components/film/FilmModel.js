@@ -14,6 +14,7 @@ const FilmModel = new FilmSchema({
       name: String,
     },
   ],
+  views: { type: Number, default: 0 },
   list_episode: [{ type: Object, default: undefined }],
   synopsis: { type: String, default: "" },
   background_medium: { type: Object, default: {} },

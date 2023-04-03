@@ -258,6 +258,15 @@ const deleteEpisode = async (id_film, id_episode) => {
   }
 };
 
+const getTrendingFilm = async () => {
+  try {
+    const result = await FilmModel.find().sort({ views: -1 }).limit(10);
+    return result;
+  } catch (error) {
+    console.log("getTrendingFilm: " + error);
+  }
+};
+
 module.exports = {
   addEpisode,
   addFilm,
@@ -267,6 +276,7 @@ module.exports = {
   getDetailEpisode,
   getRandomFilm,
   getFilmByCategories,
+  getTrendingFilm,
   search,
   updateEpisode,
   updateFilmById,

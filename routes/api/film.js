@@ -57,4 +57,12 @@ router.get("/:_id/detail", async (req, res, next) => {
   }
 });
 
+router.get("/trending", async (req, res, next) => {
+  try {
+    const result = await filmController.getTrendingFilm();
+    res.status(200).json({ data: result, error: false });
+  } catch (error) {
+    res.status(400).json({ error: true });
+  }
+});
 module.exports = router;

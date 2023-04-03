@@ -175,6 +175,13 @@ const deleteEpisode = async (id_film, id_episode) => {
   }
 };
 
+const getTrendingFilm = async () => {
+  try {
+    return await filmService.getTrendingFilm();
+  } catch (error) {
+    throw error;
+  }
+};
 module.exports = {
   addFilm,
   getFilm,
@@ -184,6 +191,7 @@ module.exports = {
   addEpisode,
   getEpisodeByFilmId,
   getDetailEpisode,
+  getTrendingFilm,
   search,
   updateFilmById,
   updateEpisode,
