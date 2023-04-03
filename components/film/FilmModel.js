@@ -24,6 +24,7 @@ const FilmModel = new FilmSchema({
     ref: "Collection",
     default: "",
   },
+  createdDate: { type: Date, default: new Date().getTime() },
 });
 
 module.exports = mongoose.model("Film", FilmModel);
