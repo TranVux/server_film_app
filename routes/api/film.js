@@ -25,9 +25,10 @@ router.get("/all", async (req, res, next) => {
 
 //http://localhost:3000/api/film/category
 //get film by categories
-router.get("/categories", async (req, res, next) => {
+router.post("/categories", async (req, res, next) => {
   try {
     const { list_categories } = req.body;
+    console.log(list_categories);
     const result = await filmController.getFilmByCategories(list_categories);
     return res.status(200).json({ data: result, error: false });
   } catch (error) {
