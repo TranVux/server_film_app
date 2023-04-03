@@ -182,13 +182,14 @@ const getTrendingFilm = async () => {
     throw error;
   }
 };
+
 module.exports = {
   addFilm,
+  addEpisode,
   getFilm,
   getFilmById,
   getRandomFilm,
   getFilmByCategories,
-  addEpisode,
   getEpisodeByFilmId,
   getDetailEpisode,
   getTrendingFilm,

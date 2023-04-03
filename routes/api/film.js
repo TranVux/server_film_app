@@ -66,4 +66,5 @@ router.get("/trending", async (req, res, next) => {
     res.status(400).json({ error: true });
   }
 });
+
 module.exports = router;

@@ -260,7 +260,13 @@ const deleteEpisode = async (id_film, id_episode) => {
 
 const getTrendingFilm = async () => {
   try {
-    const result = await FilmModel.find().sort({ views: -1 }).limit(10);
+    const result = await FilmModel.find()
+      .sort({ views: -1 })
+      .limit(10)
+      .populate({
+        path: "_id_collection",
+        populate: { path: "films", select: "name" },
+      });
     return result;
   } catch (error) {
     console.log("getTrendingFilm: " + error);
