@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const categoriesController = require("../../components/categories/CategoriesController");
 const filmController = require("../../components/film/FilmController");
 //get category has films-amount more than 0
 router.get("/", async (req, res, next) => {

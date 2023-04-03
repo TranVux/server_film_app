@@ -37,6 +37,10 @@ const getRandomFilm = async (_limit) => {
     const skip = Math.floor(Math.random() * countDocument);
     return await FilmModel.find()
       .skip(skip)
+      .populate({
+        path: "_id_collection",
+        populate: { path: "films", select: "name" },
+      })
       .limit(_limit ? _limit : 10);
   } catch (error) {
     console.log("getNewFilm: " + error);
@@ -48,6 +52,9 @@ const getFilmByCategories = async (list_category) => {
   try {
     return await FilmModel.find({
       "list_category.name": { $in: list_category },
+    }).populate({
+      path: "_id_collection",
+      populate: { path: "films", select: "name" },
     });
   } catch (error) {
     console.log("getFilmByCategories: " + error);
@@ -59,9 +66,14 @@ const getFilmByCategories = async (list_category) => {
 const search = async (key) => {
   try {
     console.log(key);
-    return await FilmModel.find().where({
-      name: { $regex: key, $options: "i" },
-    });
+    return await FilmModel.find()
+      .where({
+        name: { $regex: key, $options: "i" },
+      })
+      .populate({
+        path: "_id_collection",
+        populate: { path: "films", select: "name" },
+      });
   } catch (error) {
     console.log("search: " + error);
   }
@@ -107,7 +119,10 @@ const addFilm = async (
 
 const getFilmById = async (_id) => {
   try {
-    const film = await FilmModel.findById(_id);
+    const film = await FilmModel.findById(_id).populate({
+      path: "_id_collection",
+      populate: { path: "films", select: "name" },
+    });
     if (film) {
       return film;
     }
