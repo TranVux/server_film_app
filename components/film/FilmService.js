@@ -65,10 +65,11 @@ const getFilmByCategories = async (list_category) => {
 //always search by film_name
 const search = async (key) => {
   try {
-    console.log(key);
+    const regex = new RegExp(key, "gi");
+    console.log(regex);
     return await FilmModel.find()
       .where({
-        name: { $regex: key, $options: "i" },
+        name: { $regex: regex },
       })
       .populate({
         path: "_id_collection",

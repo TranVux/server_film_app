@@ -66,4 +66,8 @@ router.get("/trending", async (req, res, next) => {
   }
 });
 
+router.get("/newest", async (req, res, next) => {
+  try {
+  } catch (error) {}
+});
 module.exports = router;
