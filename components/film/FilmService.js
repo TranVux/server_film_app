@@ -289,6 +289,17 @@ const getTrendingFilm = async () => {
   }
 };
 
+const getFilmInArray = async (list_id) => {
+  try {
+    return await FilmModel.find({ _id: { $in: list_id } }).populate({
+      path: "_id_collection",
+      populate: { path: "films", select: "name" },
+    });
+  } catch (error) {
+    console.log("getFilmInArray: " + error);
+  }
+};
+
 module.exports = {
   addEpisode,
   addFilm,
@@ -299,6 +310,7 @@ module.exports = {
   getRandomFilm,
   getFilmByCategories,
   getTrendingFilm,
+  getFilmInArray,
   search,
   updateEpisode,
   updateFilmById,

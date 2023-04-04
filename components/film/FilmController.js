@@ -183,6 +183,14 @@ const getTrendingFilm = async () => {
   }
 };
 
+const getFilmInArray = async (list_id) => {
+  try {
+    return await filmService.getFilmInArray(list_id);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   addFilm,
   addEpisode,
@@ -193,6 +201,7 @@ module.exports = {
   getEpisodeByFilmId,
   getDetailEpisode,
   getTrendingFilm,
+  getFilmInArray,
   search,
   updateFilmById,
   updateEpisode,

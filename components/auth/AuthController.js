@@ -1,4 +1,5 @@
 const AuthService = require("./AuthService");
+const FilmService = require("../film/FilmService");
 
 const login = async (email, password) => {
   try {
@@ -26,7 +27,11 @@ const changePassword = async (user_id, oldPassword, newPassword) => {
 
 const getCollection = async (user_id) => {
   try {
-    return await AuthService.getCollection(user_id);
+    const collectionResult = await AuthService.getCollection(user_id);
+    const filmResult = await FilmService.getFilmInArray(
+      collectionResult.collections
+    );
+    return filmResult;
   } catch (error) {
     throw error;
   }

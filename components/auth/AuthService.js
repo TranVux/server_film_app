@@ -62,16 +62,12 @@ const changePassword = async (user_id, oldPass, newPassword) => {
 
 const getCollection = async (user_id) => {
   try {
-    const result = await AuthModel.findById(user_id)
-      .select("collections")
-      .populate("collections");
-    // if (!result) {
-    //   return [];
-    // }
+    const result = await AuthModel.findById(user_id).select("collections");
     return result;
   } catch (error) {
     console.log("getCollection: " + error);
   }
+  return [];
 };
 
 const addFilmCollection = async (user_id, film_id) => {
