@@ -1,13 +1,14 @@
 const express = require("express");
 const router = express.Router();
 const AuthController = require("../../components/auth/AuthController");
+const uploadImage = require("../../middlewares/cloundinaryUploadImage");
 
 router.post("/login", async function (req, res, next) {
   try {
     const { email, password } = req.body;
     const user = await AuthController.login(email, password);
     if (user) {
-      const { password, ...data } = user;
+      const { password, role, ...data } = user;
       return res.status(200).json({ data, error: false });
     }
     return res.status(200).json({ error: true });
@@ -25,7 +26,7 @@ router.post("/register", [], async function (req, res, next) {
     console.log(result);
 
     if (result) {
-      const { password, ...data } = result;
+      const { password, role, ...data } = result;
       return res.status(200).json({ data, error: false });
     }
     return res.status(200).json({ error: true });
@@ -74,5 +75,30 @@ router.post("/collections/add", [], async (req, res, next) => {
     res.status(400).json({ error: true });
   }
 });
+
+router.post(
+  "/update_image",
+  [uploadImage.single("image")],
+  async (req, res, next) => {
+    try {
+      const file = req.file;
+      const { user_id } = req.body;
+
+      if (file) {
+        // console.log(file);
+        const result = await AuthController.updateImage(user_id, file);
+        const { password, role, ...data } = result._doc;
+        res.status(200).json({ result: { ...data }, error: false });
+      } else {
+        res
+          .status(200)
+          .json({ result: null, error: true, message: "file not exist!" });
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(400).json({ error: true });
+    }
+  }
+);
 
 module.exports = router;

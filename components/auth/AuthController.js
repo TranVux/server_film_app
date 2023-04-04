@@ -39,10 +39,29 @@ const addFilmCollection = async (user_id, film_id) => {
     throw error;
   }
 };
+
+const countUser = async () => {
+  try {
+    return await AuthService.countUser();
+  } catch (error) {
+    throw error;
+  }
+};
+
+const updateImage = async (user_id, image) => {
+  try {
+    return await AuthService.updateImage(user_id, image);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   login,
   register,
-  changePassword,
   getCollection,
+  countUser,
   addFilmCollection,
+  changePassword,
+  updateImage,
 };

@@ -3,11 +3,26 @@ var router = express.Router();
 var jwt = require("jsonwebtoken");
 
 const AuthController = require("../components/auth/AuthController");
+const FilmController = require("../components/film/FilmController");
+const CategoryController = require("../components/categories/CategoriesController");
+const CollectionController = require("../components/collections/CollectionController");
 const Authentication = require("../middlewares/Authentication");
 
 /* GET home page. */
-router.get("/", [Authentication.auth], function (req, res, next) {
-  res.render("index", { title: "Dashboard" });
+router.get("/", [Authentication.auth], async function (req, res, next) {
+  const resultFilm = await FilmController.getFilm();
+  const resultCategory = await CategoryController.getAllCategories();
+  const resultCollection = await CollectionController.getAllCollection();
+  const resultUser = await AuthController.countUser();
+  res.render("index", {
+    title: "Dashboard",
+    data: {
+      user: resultUser,
+      film: resultFilm.data.length,
+      category: resultCategory.length,
+      collection: resultCollection.length,
+    },
+  });
 });
 
 //get login page

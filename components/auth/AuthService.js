@@ -92,10 +92,40 @@ const addFilmCollection = async (user_id, film_id) => {
   }
 };
 
+const countUser = async () => {
+  try {
+    return await UserModel.find().countDocuments().exec();
+  } catch (error) {
+    console.log("countUser: " + error);
+  }
+};
+
+const updateImage = async (user_id, image) => {
+  try {
+    const result = await AuthModel.findOneAndUpdate(
+      { _id: user_id },
+      {
+        $set: {
+          image: {
+            name: image.filename,
+            path: image.path,
+          },
+        },
+      },
+      { returnDocument: "after" }
+    );
+    return result;
+  } catch (error) {
+    console.log("updateImage: " + error);
+  }
+};
+
 module.exports = {
   login,
   register,
   changePassword,
   getCollection,
   addFilmCollection,
+  countUser,
+  updateImage,
 };

@@ -214,7 +214,7 @@
                             </div><!--//dropdown-menu-->
                         </div><!--//app-utility-item-->
                         <div class="app-utility-item">
-                            <a href="settings.html" title="Settings">
+                            <a href="#" title="Settings">
                                 <!--//Bootstrap Icons: https://icons.getbootstrap.com/ -->
                                 <svg width="1em" height="1em" viewBox="0 0 16 16" class="bi bi-gear icon"
                                     fill="currentColor" xmlns="http://www.w3.org/2000/svg">
@@ -652,8 +652,8 @@
 
     const handleUploadData = async (id) => {
         if (
-            form.filmName.length == 0 || form.synopsis.length == 0 ||
-            form.total_episode.length == 0 || form.trailer.length == 0 ||
+            form.filmName.value.length == 0 || form.synopsis.value.length == 0 ||
+            form.total_episode.value.length == 0 || form.trailer.value.length == 0 ||
             listCategories.length === 0
         ) {
             swal.fire({

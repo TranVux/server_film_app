@@ -121,8 +121,11 @@ router.get(
       const film = await filmController.getFilmById(id);
       const categories = await categoryController.getAllCategories();
       const collections = await collectionController.getAllCollection();
+
       for (let i = 0; i < collections.length; i++) {
-        if (collections[i]._id.toString() === film._id_collection.toString()) {
+        if (
+          collections[i]._id.toString() === film._id_collection._id.toString()
+        ) {
           collections[i].isSelected = true;
         } else {
           collections[i].isSelected = false;
@@ -134,7 +137,7 @@ router.get(
           title: "Detail Film",
           film,
           categories: categories,
-          collections: collections,
+          collections,
           error: false,
         });
         // res.json(film);
