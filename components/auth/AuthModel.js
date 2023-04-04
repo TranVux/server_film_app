@@ -8,7 +8,7 @@ const UserModel = new UserSchema({
   email: { type: String, default: "" },
   image: { type: Object, default: {} },
   bookmarks: [{ type: Object, default: {} }],
-  collections: [{ type: UserSchema.Types.ObjectId, ref: "Collection" }],
+  collections: [{ type: UserSchema.Types.ObjectId, ref: "Film" }],
   role: { type: Number, default: 0 },
   //user: 1, admin: 10
 });
