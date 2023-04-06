@@ -70,4 +70,15 @@ router.get("/newest", async (req, res, next) => {
   try {
   } catch (error) {}
 });
+
+router.post("/in-array", async (req, res, next) => {
+  try {
+    const { list_film } = req.body;
+    const result = await filmController.getFilmInArray(list_film);
+    res.status(200).json({ data: result, error: false });
+  } catch (error) {
+    res.status(400).json({ error: true });
+  }
+});
+
 module.exports = router;
