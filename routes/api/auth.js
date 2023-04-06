@@ -77,6 +77,25 @@ router.post("/collections/add", [], async (req, res, next) => {
   }
 });
 
+router.post("/collections/add/toggle", [], async (req, res, next) => {
+  try {
+    const { user_id, film_id } = req.body;
+    const result = await AuthController.addToggleFilmCollection(
+      user_id,
+      film_id
+    );
+    const { collections } = result;
+    res.status(200).json({
+      data: {
+        collections: collections,
+      },
+      error: false,
+    });
+  } catch (error) {
+    res.status(400).json({ error: true });
+  }
+});
+
 router.post(
   "/update_image",
   [uploadImage.single("image")],

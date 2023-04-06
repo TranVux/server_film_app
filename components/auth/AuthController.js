@@ -88,7 +88,16 @@ const updateImage = async (user_id, image) => {
   }
 };
 
+const addToggleFilmCollection = async (user_id, film_id) => {
+  try {
+    return await AuthService.addToggleFilmCollection(user_id, film_id);
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
+  addToggleFilmCollection,
   login,
   getCollection,
   countUser,

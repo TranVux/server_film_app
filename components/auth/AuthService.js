@@ -90,6 +90,35 @@ const addFilmCollection = async (user_id, film_id) => {
   }
 };
 
+const addToggleFilmCollection = async (user_id, film_id) => {
+  try {
+    const user = await UserModel.findById(user_id);
+    if (user) {
+      if (user.collections.includes(film_id)) {
+        return await UserModel.findOneAndUpdate(
+          { _id: user_id },
+          {
+            $pull: { collections: film_id },
+          },
+          { returnDocument: "after" }
+        );
+      } else {
+        return await UserModel.findOneAndUpdate(
+          { _id: user_id },
+          {
+            $push: { collections: film_id },
+          },
+          { returnDocument: "after" }
+        );
+      }
+    }
+    return {};
+  } catch (error) {
+    console.log("addToggleFilmCollection: " + error);
+    return {};
+  }
+};
+
 const countUser = async () => {
   try {
     return await UserModel.find().countDocuments().exec();
@@ -126,4 +155,5 @@ module.exports = {
   addFilmCollection,
   countUser,
   updateImage,
+  addToggleFilmCollection,
 };
