@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const AuthController = require("../../components/auth/AuthController");
 const uploadImage = require("../../middlewares/cloundinaryUploadImage");
+const mailTemplate = require("../../public/assets/mailTemplate");
 
 router.post("/login", async function (req, res, next) {
   try {
@@ -84,15 +85,17 @@ router.post(
       const file = req.file;
       const { user_id } = req.body;
 
+      console.log(file);
+      console.log(user_id);
       if (file) {
-        // console.log(file);
+        console.log(file);
         const result = await AuthController.updateImage(user_id, file);
         const { password, role, ...data } = result._doc;
-        res.status(200).json({ result: { ...data }, error: false });
+        res.status(200).json({ data: { ...data }, error: false });
       } else {
         res
           .status(200)
-          .json({ result: null, error: true, message: "file not exist!" });
+          .json({ data: null, error: true, message: "file not exist!" });
       }
     } catch (error) {
       console.log(error);
@@ -100,5 +103,17 @@ router.post(
     }
   }
 );
+
+router.post("/send_mail", async (req, res, next) => {
+  try {
+    const { email, subject } = req.body;
+    console.log(email + " " + subject);
+    const result = await AuthController.sendMail(email, subject, mailTemplate);
+    res.status(200).json({ result, error: false });
+  } catch (error) {
+    console.log("Send mail: " + error);
+    res.status(400).json({ error: true });
+  }
+});
 
 module.exports = router;

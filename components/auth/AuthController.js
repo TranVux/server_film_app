@@ -1,5 +1,32 @@
+require("dotenv").config();
 const AuthService = require("./AuthService");
 const FilmService = require("../film/FilmService");
+const mailer = require("nodemailer");
+
+const transporter = mailer.createTransport({
+  pool: true,
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // use TLS
+  auth: {
+    user: "vutran789jjjj@gmail.com",
+    pass: "ltndrauapgmpvspb",
+  },
+});
+
+const sendMail = async (email, subject, content) => {
+  try {
+    const mailOptions = {
+      from: "TAVux <vutaps24414@fpt.edu.vn>",
+      to: email,
+      subject,
+      html: content,
+    };
+    return await transporter.sendMail(mailOptions);
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 const login = async (email, password) => {
   try {
@@ -63,9 +90,10 @@ const updateImage = async (user_id, image) => {
 
 module.exports = {
   login,
-  register,
   getCollection,
   countUser,
+  sendMail,
+  register,
   addFilmCollection,
   changePassword,
   updateImage,
