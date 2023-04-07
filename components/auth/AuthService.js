@@ -148,12 +148,12 @@ const updateImage = async (user_id, image) => {
 };
 
 module.exports = {
+  getCollection,
+  countUser,
   login,
+  addToggleFilmCollection,
+  addFilmCollection,
   register,
   changePassword,
-  getCollection,
-  addFilmCollection,
-  countUser,
   updateImage,
-  addToggleFilmCollection,
 };

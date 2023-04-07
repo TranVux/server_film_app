@@ -50,9 +50,9 @@ const getCategoriesHasFilm = async () => {
 
 module.exports = {
   getAllCategories,
+  getCategoriesHasFilm,
   addCategory,
-  deleteCategory,
   updateCategory,
   increaseCount,
-  getCategoriesHasFilm,
+  deleteCategory,
 };

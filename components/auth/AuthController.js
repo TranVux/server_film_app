@@ -97,13 +97,13 @@ const addToggleFilmCollection = async (user_id, film_id) => {
 };
 
 module.exports = {
-  addToggleFilmCollection,
-  login,
   getCollection,
   countUser,
+  login,
+  addToggleFilmCollection,
+  addFilmCollection,
   sendMail,
   register,
-  addFilmCollection,
   changePassword,
   updateImage,
 };

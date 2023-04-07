@@ -28,14 +28,21 @@ router.post("/register", [], async function (req, res, next) {
 
     if (result) {
       const { password, role, ...data } = result;
+      //send mail to user
+      AuthController.sendMail(
+        email,
+        "Thư báo lập tài khoản thành công!",
+        mailTemplate
+      );
       return res.status(200).json({ data, error: false });
     }
-    return res.status(200).json({ error: true });
+    return res.status(200).json({ data: {}, error: true });
   } catch (error) {
-    return res.status(400).json({ error: true });
+    return res.status(400).json({ data: {}, error: true });
   }
 });
 
+//change password of user by id
 router.post("/change_password", [], async function (req, res, next) {
   try {
     const { user_id, oldPassword, newPassword } = req.body;
@@ -56,6 +63,7 @@ router.post("/change_password", [], async function (req, res, next) {
   }
 });
 
+//get user collection by id
 router.get("/collections/:user_id", [], async (req, res, next) => {
   try {
     const { user_id } = req.params;
@@ -67,6 +75,7 @@ router.get("/collections/:user_id", [], async (req, res, next) => {
   }
 });
 
+// add a film to pool collection of user
 router.post("/collections/add", [], async (req, res, next) => {
   try {
     const { user_id, film_id } = req.body;
@@ -77,6 +86,7 @@ router.post("/collections/add", [], async (req, res, next) => {
   }
 });
 
+//toggle a collection into pool collection of user
 router.post("/collections/add/toggle", [], async (req, res, next) => {
   try {
     const { user_id, film_id } = req.body;
@@ -96,6 +106,7 @@ router.post("/collections/add/toggle", [], async (req, res, next) => {
   }
 });
 
+// upload image avatar for user
 router.post(
   "/update_image",
   [uploadImage.single("image")],
@@ -123,6 +134,7 @@ router.post(
   }
 );
 
+// send email for user after sign up successfully
 router.post("/send_mail", async (req, res, next) => {
   try {
     const { email, subject } = req.body;
