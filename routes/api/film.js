@@ -74,9 +74,11 @@ router.get("/newest", async (req, res, next) => {
 router.post("/in-array", async (req, res, next) => {
   try {
     const { list_film } = req.body;
+    // console.log(list_film);
     const result = await filmController.getFilmInArray(list_film);
     res.status(200).json({ data: result, error: false });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ error: true });
   }
 });
