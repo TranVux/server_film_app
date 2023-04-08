@@ -668,8 +668,9 @@
                     let bareUrl = window.location.host;
                     let startUrl = bareUrl.includes("localhost") ? "http://" : "https://";
 
-                    console.log(bareUrl);
-                    window.location.assign(new URL(startUrl.concat(bareUrl).concat(result.urlRedirect)));
+                    console.log(bareUrl + " " + startUrl);
+                    console.log(startUrl.concat(bareUrl).concat(res.urlRedirect))
+                    window.location.assign(startUrl.concat(bareUrl).concat(res.urlRedirect));
                 }, 500)
             } else {
                 Swal.fire({
