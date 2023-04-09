@@ -67,21 +67,23 @@ const updateFilmById = async (
     console.log(
       "FilmController-PreviousCollectionID: " + previous_id_collection
     );
-    const result = await filmService.updateFilmById(
-      _id,
-      filmName,
-      trailerID,
-      total_episode,
-      list_category,
-      synopsis,
-      _id_collection,
-      imageList
-    );
-    await collectionService.updateFilm(previous_id_collection, _id);
-    await categoriesService.updateFilmAmount(
-      previous_list_category.map((value) => value._id),
-      list_category.map((value) => value._id)
-    );
+    const [result, resultCollection, resultCategories] = await Promise.all([
+      filmService.updateFilmById(
+        _id,
+        filmName,
+        trailerID,
+        total_episode,
+        list_category,
+        synopsis,
+        _id_collection,
+        imageList
+      ),
+      collectionService.updateFilm(previous_id_collection, _id),
+      categoriesService.updateFilmAmount(
+        previous_list_category.map((value) => value._id),
+        list_category.map((value) => value._id)
+      ),
+    ]);
     return result;
   } catch (error) {
     throw error;
@@ -90,15 +92,12 @@ const updateFilmById = async (
 
 const deleteFilm = async (filmID, collectionID, list_category) => {
   try {
-    const resultFilm = await filmService.deleteFilm(filmID);
-    const resultCollection = await collectionService.deleteFilm(
-      filmID,
-      collectionID
-    );
-    const resultCategories = await categoriesService.modifyFilmAmount(
-      list_category,
-      -1
-    );
+    const [resultFilm, resultCollection, resultCategories] = await Promise.all([
+      filmService.deleteFilm(filmID),
+      collectionService.deleteFilm(filmID, collectionID),
+      categoriesService.modifyFilmAmount(list_category, -1),
+    ]);
+
     return resultCollection && resultFilm && resultCategories;
   } catch (error) {
     throw error;
