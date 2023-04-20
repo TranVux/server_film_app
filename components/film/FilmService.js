@@ -3,7 +3,7 @@ const FilmModel = require("./FilmModel");
 const getFilm = async (_limit, _page) => {
   try {
     if (!_limit || !_page) {
-      const films = await FilmModel.find();
+      const films = await FilmModel.find().populate("like");
       return { data: films };
     } else {
       const countOfDocument = await FilmModel.count({});
@@ -22,7 +22,10 @@ const getFilm = async (_limit, _page) => {
       if (startIndex > 0) {
         result.previous = { page: Number(_page) - 1 };
       }
-      result.data = await FilmModel.find().skip(startIndex).limit(_limit);
+      result.data = await FilmModel.find()
+        .populate("like")
+        .skip(startIndex)
+        .limit(_limit);
 
       return result;
     }
@@ -41,6 +44,7 @@ const getRandomFilm = async (_limit) => {
         path: "_id_collection",
         populate: { path: "films", select: "name" },
       })
+      .populate("like")
       .limit(_limit ? _limit : 10);
   } catch (error) {
     console.log("getNewFilm: " + error);
@@ -52,10 +56,12 @@ const getFilmByCategories = async (list_category) => {
   try {
     return await FilmModel.find({
       "list_category.name": { $in: list_category },
-    }).populate({
-      path: "_id_collection",
-      populate: { path: "films", select: "name" },
-    });
+    })
+      .populate({
+        path: "_id_collection",
+        populate: { path: "films", select: "name" },
+      })
+      .populate("like");
   } catch (error) {
     console.log("getFilmByCategories: " + error);
   }
@@ -74,15 +80,18 @@ const search = async (key) => {
       .populate({
         path: "_id_collection",
         populate: { path: "films", select: "name" },
-      });
+      })
+      .populate("like");
   } catch (error) {
     console.log("search: " + error);
   }
 };
 
 const addFilm = async (
+  film_id,
   filmName,
   trailerID,
+  likeId,
   total_episode,
   list_category,
   synopsis,
@@ -91,8 +100,10 @@ const addFilm = async (
 ) => {
   try {
     const result = await FilmModel.create({
+      _id: film_id,
       name: filmName,
       trailer: trailerID,
+      like: likeId,
       total_episode: total_episode,
       list_category: list_category,
       synopsis: synopsis,
@@ -120,10 +131,12 @@ const addFilm = async (
 
 const getFilmById = async (_id) => {
   try {
-    const film = await FilmModel.findById(_id).populate({
-      path: "_id_collection",
-      populate: { path: "films", select: "name" },
-    });
+    const film = await FilmModel.findById(_id)
+      .populate({
+        path: "_id_collection",
+        populate: { path: "films", select: "name" },
+      })
+      .populate("like");
     if (film) {
       return film;
     }
@@ -282,7 +295,8 @@ const getTrendingFilm = async () => {
       .populate({
         path: "_id_collection",
         populate: { path: "films", select: "name" },
-      });
+      })
+      .populate("like");
     return result;
   } catch (error) {
     console.log("getTrendingFilm: " + error);
@@ -291,10 +305,12 @@ const getTrendingFilm = async () => {
 
 const getFilmInArray = async (list_id) => {
   try {
-    return await FilmModel.find({ _id: { $in: list_id } }).populate({
-      path: "_id_collection",
-      populate: { path: "films", select: "name" },
-    });
+    return await FilmModel.find({ _id: { $in: list_id } })
+      .populate({
+        path: "_id_collection",
+        populate: { path: "films", select: "name" },
+      })
+      .populate("like");
   } catch (error) {
     console.log("getFilmInArray: " + error);
   }

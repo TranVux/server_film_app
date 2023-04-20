@@ -1,11 +1,10 @@
 const mongoose = require("mongoose");
-
 const FilmSchema = mongoose.Schema;
 
 const FilmModel = new FilmSchema({
   name: { type: String, default: "" },
   trailer: { type: String },
-  like: { type: Number, default: 0 },
+  like: { type: FilmSchema.Types.ObjectId, ref: "Like" },
   total_episode: { type: Number, default: 0 },
   score: { type: Number, default: 0.0 },
   list_category: [

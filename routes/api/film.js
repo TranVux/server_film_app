@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 
 const filmController = require("../../components/film/FilmController");
+const likeController = require("../../components/like/LikeController");
 //get category has films-amount more than 0
 router.get("/", async (req, res, next) => {
   try {
@@ -83,4 +84,16 @@ router.post("/in-array", async (req, res, next) => {
   }
 });
 
+//increase amount like for film
+router.post("/like/:filmId/:userId", async (req, res, next) => {
+  const { filmId, userId } = req.params;
+  console.log(filmId + " " + userId);
+  try {
+    const result = await likeController.toggleLike(userId, filmId);
+    res.status(200).json({ data: result, error: false });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ error: true });
+  }
+});
 module.exports = router;

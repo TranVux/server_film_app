@@ -433,7 +433,7 @@
                                                 <img width="100px" style="aspect-ratio: 3/4; object-fit: contain;"
                                                     src="{{this.thumbnail.path}}" />
                                             </td>
-                                            <td class="cell">{{this.like}}</td>
+                                            <td class="cell">{{this.like.liked.length}}</td>
                                             <td class="cell">{{this.total_episode}}</td>
                                             <td class="cell">
                                                 <a class="btn btn-sm btn-info" style="color: white;"
@@ -525,7 +525,7 @@
 
     const handleDeleteFilm = async (filmID, _id_collection) => {
         Swal.fire({
-            title: 'Đang thêm...',
+            title: 'Đang xóa...',
             html: 'Vui lòng chờ...',
             allowEscapeKey: false,
             allowOutsideClick: false,

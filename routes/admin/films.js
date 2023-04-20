@@ -24,7 +24,11 @@ router.get("/", [Authentication.auth], async function (req, res, next) {
       }
 
       result.totalPage = totalPage;
+
+      // let totalLike = result.like.liked.length;
+      // result.like.totalLike = totalLike;
     }
+    // console.log(result);
     res.render("film/list", { title: "List Film", filmList: result });
     // res.json({ title: "List Film", filmList: result });
   } catch (error) {
@@ -231,10 +235,11 @@ router.post("/delete", [Authentication.auth], async (req, res, next) => {
   const { _id, _id_collection } = req.body;
   try {
     const detailFilm = await filmController.getFilmById(_id);
-    const result = filmController.deleteFilm(
+    const result = await filmController.deleteFilm(
       _id,
       _id_collection,
-      detailFilm.list_category
+      detailFilm.list_category,
+      detailFilm.like
     );
     res.status(200).json({ result, error: false });
   } catch (error) {

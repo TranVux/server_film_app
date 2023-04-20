@@ -1,6 +1,9 @@
+const mongoose = require("mongoose");
+
 const filmService = require("./FilmService");
 const collectionService = require("../collections/CollectionService");
 const categoriesService = require("../categories/CategoriesService");
+const likeService = require("../like/LikeService");
 
 const getFilm = async (_limit, _page) => {
   try {
@@ -28,9 +31,14 @@ const addFilm = async (
   imageList
 ) => {
   try {
+    const film_id = new mongoose.Types.ObjectId();
+    const like_id = new mongoose.Types.ObjectId();
+
     const filmResult = await filmService.addFilm(
+      film_id,
       filmName,
       trailerID,
+      like_id,
       total_episode,
       list_category,
       synopsis,
@@ -43,8 +51,15 @@ const addFilm = async (
       list_category.map((value) => value._id),
       1
     );
+    const createLikeRecordForFilm = await likeService.createLikeRecord(
+      like_id,
+      film_id
+    );
+
     console.log("CollectionResult: " + collectionResult);
     console.log("CategoriesResult: " + categoriesResult);
+    console.log("createLikeRecordForFilm: " + createLikeRecordForFilm);
+
     return filmResult;
   } catch (error) {
     throw error;
@@ -90,15 +105,17 @@ const updateFilmById = async (
   }
 };
 
-const deleteFilm = async (filmID, collectionID, list_category) => {
+const deleteFilm = async (filmID, collectionID, list_category, likeID) => {
   try {
-    const [resultFilm, resultCollection, resultCategories] = await Promise.all([
-      filmService.deleteFilm(filmID),
-      collectionService.deleteFilm(filmID, collectionID),
-      categoriesService.modifyFilmAmount(list_category, -1),
-    ]);
+    const [resultFilm, resultCollection, resultCategories, resultLike] =
+      await Promise.all([
+        filmService.deleteFilm(filmID),
+        collectionService.deleteFilm(filmID, collectionID),
+        categoriesService.modifyFilmAmount(list_category, -1),
+        likeService.deleteLike(likeID),
+      ]);
 
-    return resultCollection && resultFilm && resultCategories;
+    return resultCollection && resultFilm && resultCategories && resultLike;
   } catch (error) {
     throw error;
   }
