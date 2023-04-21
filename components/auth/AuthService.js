@@ -24,6 +24,11 @@ const login = async (email, password, extraData, type) => {
           return result._doc;
           // const result = await UserModel.create({});
         } else {
+          console.log(extraData._id);
+
+          user.social_id = extraData._id;
+          await user.save();
+
           return user._doc;
         }
       } catch (error) {
