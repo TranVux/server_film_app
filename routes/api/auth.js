@@ -6,8 +6,9 @@ const mailTemplate = require("../../public/assets/mailTemplate");
 
 router.post("/login", async function (req, res, next) {
   try {
-    const { email, password } = req.body;
-    const user = await AuthController.login(email, password);
+    const { email, password, ...extraData } = req.body;
+    const { type } = req.query;
+    const user = await AuthController.login(email, password, extraData, type);
     if (user) {
       const { password, role, ...data } = user;
       return res.status(200).json({ data, error: false });

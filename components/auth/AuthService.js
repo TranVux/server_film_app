@@ -1,20 +1,52 @@
+const { default: mongoose } = require("mongoose");
 const AuthModel = require("./AuthModel");
 const UserModel = require("./AuthModel");
 const bcrypt = require("bcryptjs");
 
-const login = async (email, password) => {
-  try {
-    const user = await UserModel.findOne({ email: email });
-    if (user) {
-      const compare = bcrypt.compareSync(password, user.password);
-      if (compare) {
-        return user._doc;
+const login = async (email, password, extraData, type) => {
+  switch (type) {
+    case "social":
+      try {
+        //handle login
+        const user = await UserModel.findOne({ email });
+        if (!user) {
+          // register for user
+          console.log(extraData);
+          const result = await UserModel.create({
+            ...extraData,
+            email,
+            password: "",
+            social_id: extraData._id,
+            _id: new mongoose.Types.ObjectId(),
+          });
+
+          console.log("Create user success fully");
+          return result._doc;
+          // const result = await UserModel.create({});
+        } else {
+          return user._doc;
+        }
+      } catch (error) {
+        console.log("LOGIN ERROR>>>>>: " + error);
+        return null;
       }
-    }
-  } catch (error) {
-    console.log("LOGIN ERROR>>>>>: " + error);
-    return null;
+      break;
+    default:
+      try {
+        const user = await UserModel.findOne({ email: email });
+        if (user) {
+          const compare = bcrypt.compareSync(password, user.password);
+          if (compare) {
+            return user._doc;
+          }
+        }
+      } catch (error) {
+        console.log("LOGIN ERROR>>>>>: " + error);
+        return null;
+      }
+      break;
   }
+
   return null;
 };
 

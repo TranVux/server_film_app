@@ -28,9 +28,9 @@ const sendMail = async (email, subject, content) => {
   }
 };
 
-const login = async (email, password) => {
+const login = async (email, password, extraData, type) => {
   try {
-    return await AuthService.login(email, password);
+    return await AuthService.login(email, password, extraData, type);
   } catch (error) {
     throw error;
   }
@@ -80,7 +80,7 @@ const countUser = async () => {
   }
 };
 
-const updateImage = async (user_id, image) => {
+const updateImage = async (user_id, image, type) => {
   try {
     return await AuthService.updateImage(user_id, image);
   } catch (error) {
