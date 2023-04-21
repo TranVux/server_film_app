@@ -27,7 +27,7 @@ router.post("/register", [], async function (req, res, next) {
     const result = await AuthController.register(username, email, password);
     console.log(result);
 
-    if (result) {
+    if (!result.message) {
       const { password, role, ...data } = result;
       //send mail to user
       AuthController.sendMail(
@@ -37,7 +37,7 @@ router.post("/register", [], async function (req, res, next) {
       );
       return res.status(200).json({ data, error: false });
     }
-    return res.status(200).json({ data: {}, error: true });
+    return res.status(200).json({ ...result, error: true });
   } catch (error) {
     return res.status(400).json({ data: {}, error: true });
   }

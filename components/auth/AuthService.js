@@ -64,13 +64,13 @@ const register = async (username, email, password) => {
         password: hasPass,
       });
       return user._doc;
+    } else {
+      return { message: `Existed an user with email: ${user.email}` };
     }
   } catch (error) {
     console.log("register>>>>>>>Error: " + error);
     return null;
   }
-
-  return null;
 };
 
 const changePassword = async (user_id, oldPass, newPassword) => {
